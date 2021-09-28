@@ -6,4 +6,4 @@ pluginManagement {
 	}
 }
 
-rootProject.name = "app"
+rootProject.name = "getout"
