@@ -31,4 +31,4 @@ docker-test:
 	docker build --target builder .
 
 swagger:
-	swag init --parseDependency --parseInternal --parseDepth 2 --generalInfo cmd/server.go
+	swag init --parseDependency --parseInternal --parseDepth 2 --generalInfo cmd/serve.go
