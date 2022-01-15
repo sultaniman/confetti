@@ -14,7 +14,9 @@ func App(handler *Handler) *fiber.App {
 	system := app.Group("/system")
 	system.Get("/health", handler.Health)
 
-	users := app.Group("/users")
+	admin := app.Group("/admin")
+
+	users := admin.Group("/users")
 	users.Post("/", handler.CreateUser)
 	users.Get("/:user_id", handler.GetUser)
 	users.Put("/:user_id", handler.UpdateUser)
@@ -24,10 +26,10 @@ func App(handler *Handler) *fiber.App {
 
 	auth := app.Group("/auth")
 	auth.Get("/jwks", handler.JWKS)
-	auth.Post("/logout", handler.LogOut)
 	auth.Post("/register", handler.Register)
-	auth.Post("/token", handler.Login)
+	auth.Post("/token", handler.AuthTokenFlow)
 	auth.Post("/token/refresh", handler.RefreshToken)
+	auth.Delete("/token", handler.LogOut)
 
 	return app
 }
