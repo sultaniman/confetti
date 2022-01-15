@@ -9,7 +9,6 @@ import (
 	"github.com/lestrrat-go/jwx/jwa"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
-	"github.com/spf13/viper"
 	"time"
 )
 
@@ -113,11 +112,10 @@ func (s *JWXService) AuthTokenResponse(accessToken jwt.Token) (*schema.TokenResp
 		return nil, http.InternalError(err)
 	}
 
-	accessTokenTTL := viper.GetDuration("access_token_ttl")
 	return &schema.TokenResponse{
 		AccessToken:  string(signed),
 		TokenType:    "Bearer",
-		ExpiresIn:    int(accessTokenTTL.Seconds()),
+		ExpiresIn:    int(AccessTokenDuration.Seconds()),
 		RefreshToken: "HttpOnly",
 	}, nil
 }

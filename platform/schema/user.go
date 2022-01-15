@@ -8,7 +8,6 @@ import (
 
 type NewUserRequest struct {
 	FullName string
-	Username string
 	Email    string
 	Password string
 	Provider string
@@ -17,7 +16,6 @@ type NewUserRequest struct {
 
 type UpdateUserRequest struct {
 	FullName string
-	Username string
 	Settings json.RawMessage `swaggertype:"object"`
 }
 
@@ -34,13 +32,12 @@ type UpdateUserPasswordRequest struct {
 type UserResponse struct {
 	ID        uuid.UUID
 	FullName  string
-	Username  string
 	Email     string
 	IsAdmin   bool
 	IsActive  bool
 	Provider  string
 	Settings  json.RawMessage `swaggertype:"object"`
-	Status    string
+	Password  string          `json:"-"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

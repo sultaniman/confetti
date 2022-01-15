@@ -14,12 +14,14 @@ import (
 
 type UserService interface {
 	Get(id uuid.UUID) (*schema.UserResponse, error)
+	GetByEmail(email string) (*schema.UserResponse, error)
 	Create(user *schema.NewUserRequest) (*schema.UserResponse, error)
 	Update(userId uuid.UUID, user *schema.UpdateUserRequest) (*schema.UserResponse, error)
 	UpdateEmail(userId uuid.UUID, user *schema.UpdateUserEmailRequest) (*schema.UserResponse, error)
 	UpdatePassword(userId uuid.UUID, emailUpdate *schema.UpdateUserPasswordRequest) (*schema.UserResponse, error)
 	Delete(id uuid.UUID) (*schema.UserResponse, error)
 	Exists(userId uuid.UUID) bool
+	EmailExists(email string) bool
 }
 
 type userService struct {
@@ -53,6 +55,27 @@ func (s *userService) Get(userId uuid.UUID) (*schema.UserResponse, error) {
 	return s.userToResponse(user), nil
 }
 
+func (s *userService) GetByEmail(email string) (*schema.UserResponse, error) {
+	if !s.usersRepo.EmailExists(email) {
+		log.Info().
+			Str("email", email).
+			Msg(fmt.Sprintf("User not found"))
+
+		return nil, http.NotFoundError("User not found")
+	}
+
+	user, err := s.usersRepo.GetByEmail(email)
+	if err != nil {
+		log.Info().
+			Str("email", email).
+			Msg(fmt.Sprintf("Unable to fetch user"))
+
+		return nil, http.FetchError(err, "Unable to fetch user")
+	}
+
+	return s.userToResponse(user), nil
+}
+
 func (s *userService) Create(newUserRequest *schema.NewUserRequest) (*schema.UserResponse, error) {
 	if !util.IsStrongPassword(newUserRequest.Password) {
 		log.Warn().Msg("Password is weak")
@@ -70,7 +93,6 @@ func (s *userService) Create(newUserRequest *schema.NewUserRequest) (*schema.Use
 
 	user, err := s.usersRepo.Create(&entities.NewUser{
 		FullName: newUserRequest.FullName,
-		Username: newUserRequest.Username,
 		Email:    newUserRequest.Email,
 		Password: password,
 		Settings: newUserRequest.Settings,
@@ -108,7 +130,6 @@ func (s *userService) Update(userId uuid.UUID, userUpdate *schema.UpdateUserRequ
 
 	user, err := s.usersRepo.Update(userId, &entities.UpdateUser{
 		FullName: userUpdate.FullName,
-		Username: userUpdate.Username,
 		Settings: userUpdate.Settings,
 	})
 
@@ -142,7 +163,7 @@ func (s *userService) UpdateEmail(userId uuid.UUID, emailUpdate *schema.UpdateUs
 		return nil, http.NotFoundError("User not found")
 	}
 
-	hash, err := s.usersRepo.GetPasswordHash(userId)
+	user, err := s.usersRepo.Get(userId)
 	if err != nil {
 		if e := pgerror.UniqueViolation(err); e != nil {
 			log.Error().
@@ -160,7 +181,7 @@ func (s *userService) UpdateEmail(userId uuid.UUID, emailUpdate *schema.UpdateUs
 		}
 	}
 
-	err = util.CheckPassword(hash, emailUpdate.Password)
+	err = util.CheckPassword(user.Password, emailUpdate.Password)
 	if err != nil {
 		return nil, http.InvalidPasswordError()
 	}
@@ -189,7 +210,7 @@ func (s *userService) UpdatePassword(userId uuid.UUID, passwordUpdate *schema.Up
 		return nil, http.InsecurePasswordError()
 	}
 
-	hash, err := s.usersRepo.GetPasswordHash(userId)
+	user, err := s.usersRepo.Get(userId)
 	if err != nil {
 		log.Error().
 			Err(err).
@@ -199,7 +220,7 @@ func (s *userService) UpdatePassword(userId uuid.UUID, passwordUpdate *schema.Up
 		return nil, http.InternalError(err)
 	}
 
-	err = util.CheckPassword(hash, passwordUpdate.OldPassword)
+	err = util.CheckPassword(user.Password, passwordUpdate.OldPassword)
 	if err != nil {
 		return nil, http.InvalidPasswordError()
 	}
@@ -249,16 +270,20 @@ func (s *userService) Exists(userId uuid.UUID) bool {
 	return s.usersRepo.Exists(userId)
 }
 
+func (s *userService) EmailExists(email string) bool {
+	return s.usersRepo.EmailExists(email)
+}
+
 func (s *userService) userToResponse(user *entities.User) *schema.UserResponse {
 	return &schema.UserResponse{
 		ID:        user.ID,
 		FullName:  user.FullName,
-		Username:  user.Username,
 		Email:     user.Email,
 		IsAdmin:   user.IsAdmin,
 		IsActive:  user.IsActive,
 		Settings:  user.Settings,
 		Provider:  user.Provider,
+		Password:  user.Password,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}

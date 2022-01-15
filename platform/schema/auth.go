@@ -5,6 +5,11 @@ type LoginRequest struct {
 	Password string
 }
 
+type RegisterRequest struct {
+	Email    string
+	Password string
+}
+
 type TokenResponse struct {
 	AccessToken  string
 	TokenType    string

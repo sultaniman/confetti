@@ -32,5 +32,5 @@ func (r *Repo) Delete(table string, wheres sq.Eq) sq.DeleteBuilder {
 }
 
 func (r *Repo) Count(table string, wheres sq.Eq) sq.SelectBuilder {
-	return r.Q.Select("COUNT(id)").From(table).Where(wheres).Suffix("returning *").Limit(1)
+	return r.Q.Select("COUNT(id)").From(table).Where(wheres).Limit(1)
 }

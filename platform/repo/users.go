@@ -10,13 +10,14 @@ import (
 //go:generate mockgen -source=users.go -destination=../mocks/users.go -package=mocks
 type UserRepo interface {
 	Get(id uuid.UUID) (*entities.User, error)
+	GetByEmail(email string) (*entities.User, error)
 	Create(user *entities.NewUser) (*entities.User, error)
 	Delete(id uuid.UUID) (*entities.User, error)
 	Update(userId uuid.UUID, user *entities.UpdateUser) (*entities.User, error)
 	Exists(userId uuid.UUID) bool
+	EmailExists(email string) bool
 	UpdateEmail(userId uuid.UUID, newEmail string) (*entities.User, error)
 	UpdatePassword(userId uuid.UUID, newPassword string) (*entities.User, error)
-	GetPasswordHash(id uuid.UUID) (string, error)
 }
 
 type userRepo struct {
@@ -40,21 +41,21 @@ func (r *userRepo) Get(id uuid.UUID) (*entities.User, error) {
 	}
 
 	var user entities.User
-	return &user, r.Base.DB.Get(user, query, args...)
+	return &user, r.Base.DB.Get(&user, query, args...)
 }
 
-func (r *userRepo) GetPasswordHash(id uuid.UUID) (string, error) {
+func (r *userRepo) GetByEmail(email string) (*entities.User, error) {
 	query, args, err := r.Base.
 		Select("users").
-		Where(sq.Eq{"id": id}).
+		Where(sq.Eq{"email": email}).
 		ToSql()
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	var user entities.User
-	return user.Password, r.Base.DB.Get(user, query, args...)
+	return &user, r.Base.DB.Get(&user, query, args...)
 }
 
 func (r *userRepo) Create(user *entities.NewUser) (*entities.User, error) {
@@ -63,7 +64,6 @@ func (r *userRepo) Create(user *entities.NewUser) (*entities.User, error) {
 		Insert(
 			"users",
 			"full_name",
-			"username",
 			"email",
 			"password",
 			"is_admin",
@@ -74,7 +74,6 @@ func (r *userRepo) Create(user *entities.NewUser) (*entities.User, error) {
 			"updated_at",
 		).
 		Values(
-			user.FullName,
 			user.FullName,
 			user.Email,
 			user.Password,
@@ -99,10 +98,6 @@ func (r *userRepo) Update(userId uuid.UUID, user *entities.UpdateUser) (*entitie
 	querySet := r.Base.
 		Update("users", true).
 		Where(sq.Eq{"id": userId})
-
-	if user.Username != "" {
-		querySet = querySet.Set("username", user.Username)
-	}
 
 	if user.FullName != "" {
 		querySet = querySet.Set("full_name", user.FullName)
@@ -130,7 +125,25 @@ func (r *userRepo) Exists(userId uuid.UUID) bool {
 		return false
 	}
 
-	err = r.Base.DB.Get(userCount, query, args...)
+	err = r.Base.DB.Get(&userCount, query, args...)
+	if err != nil {
+		return false
+	}
+
+	return userCount > 0
+}
+
+func (r *userRepo) EmailExists(email string) bool {
+	var userCount int
+	query, args, err := r.Base.
+		Count("users", sq.Eq{"email": email}).
+		ToSql()
+
+	if err != nil {
+		return false
+	}
+
+	err = r.Base.DB.Get(&userCount, query, args...)
 	if err != nil {
 		return false
 	}
