@@ -92,9 +92,9 @@ func (p *ParamHandler) UpdateUserPasswordPayload(c *fiber.Ctx) (*schema.UpdateUs
 	return updateUserPasswordPayload, nil
 }
 
-func (p *ParamHandler) LoginPayload(c *fiber.Ctx) (*schema.LoginRequest, error) {
-	loginRequestPayload := new(schema.LoginRequest)
-	if err := c.BodyParser(loginRequestPayload); err != nil {
+func (p *ParamHandler) LoginPayload(ctx *fiber.Ctx) (*schema.LoginRequest, error) {
+	loginRequestPayload := &schema.LoginRequest{}
+	if err := ctx.BodyParser(loginRequestPayload); err != nil {
 		return nil, &shared.ServiceError{
 			Response:   err,
 			StatusCode: fiber.StatusInternalServerError,
@@ -103,4 +103,17 @@ func (p *ParamHandler) LoginPayload(c *fiber.Ctx) (*schema.LoginRequest, error) 
 	}
 
 	return loginRequestPayload, nil
+}
+
+func (p *ParamHandler) RegisterPayload(ctx *fiber.Ctx) (*schema.RegisterRequest, error) {
+	registerRequestPayload := &schema.RegisterRequest{}
+	if err := ctx.BodyParser(registerRequestPayload); err != nil {
+		return nil, &shared.ServiceError{
+			Response:   err,
+			StatusCode: fiber.StatusInternalServerError,
+			ErrorCode:  shared.ServerError,
+		}
+	}
+
+	return registerRequestPayload, nil
 }
