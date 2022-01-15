@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE users
 (
     id         UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
-    full_name  VARCHAR(255)                NOT NULL,
+    full_name  VARCHAR(255)                NULL,
     email      VARCHAR(100)                NOT NULL,
     password   VARCHAR(2048)               NOT NULL,
     is_admin   BOOL                        NOT NULL DEFAULT false,
@@ -18,8 +18,8 @@ CREATE TABLE users
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP)
 );
 
-CREATE UNIQUE INDEX ix_email ON users (lower(email));
-CREATE INDEX ix_full_name ON users (lower(full_name));
+CREATE UNIQUE INDEX ix_users_email ON users (lower(email));
+CREATE INDEX ix_users_full_name ON users (lower(full_name));
 
 
 CREATE TABLE messages
@@ -44,9 +44,9 @@ CREATE TABLE messages
             ON DELETE CASCADE
 );
 
-CREATE INDEX ix_owner ON messages (owner_id);
-CREATE INDEX ix_to_user ON messages (to_user_id);
-CREATE INDEX ix_geo_location ON messages USING gist (location);
+CREATE INDEX ix_messages_owner ON messages (owner_id);
+CREATE INDEX ix_messages_to_user ON messages (to_user_id);
+CREATE INDEX ix_messages_geo_location ON messages USING gist (location);
 
 CREATE TABLE files
 (
@@ -65,8 +65,23 @@ CREATE TABLE files
             ON DELETE CASCADE
 );
 
-CREATE INDEX ix_file_owner ON files (owner_id);
-CREATE INDEX ix_related_message ON files (message_id);
+CREATE INDEX ix_files_owner ON files (owner_id);
+CREATE INDEX ix_files_related_message ON files (message_id);
+
+CREATE TABLE events
+(
+    id         UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
+    action     VARCHAR(20)                 NOT NULL, -- create:user, update:user etc.
+    context    VARCHAR(20)                 NULL,     -- handler:users service:webhooks etc.
+    source     VARCHAR(40)                 NULL,     -- user id, record id etc.
+    data       JSONB                       NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+    expires_at TIMESTAMP WITHOUT TIME ZONE NULL
+);
+
+CREATE INDEX ix_events_action ON events (action);
+CREATE INDEX ix_events_context ON events (context);
+CREATE INDEX ix_events_source ON events (source);
 
 INSERT INTO users
 VALUES (uuid_generate_v4(),
