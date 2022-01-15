@@ -40,7 +40,7 @@ func NewHandler(db *sqlx.DB, key *rsa.PrivateKey) (*Handler, error) {
 		BaseRepo:    baseRepo,
 		UserRepo:    userRepo,
 		UserService: userService,
-		AuthService: services.NewAuthService(userRepo, userService, jwxService),
+		AuthService: services.NewAuthService(userService, jwxService),
 		JWXService:  jwxService,
 		Params: &ParamHandler{
 			UserService: userService,

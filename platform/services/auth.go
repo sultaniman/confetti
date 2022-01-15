@@ -5,7 +5,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/imanhodjaev/getout/platform/http"
-	"github.com/imanhodjaev/getout/platform/repo"
 	"github.com/imanhodjaev/getout/platform/schema"
 	"github.com/imanhodjaev/getout/util"
 	"github.com/lestrrat-go/jwx/jwt"
@@ -24,14 +23,12 @@ type AuthService interface {
 }
 
 type authService struct {
-	usersRepo    repo.UserRepo
 	usersService UserService
 	jwxService   *JWXService
 }
 
-func NewAuthService(usersRepo repo.UserRepo, usersService UserService, jwxService *JWXService) AuthService {
+func NewAuthService(usersService UserService, jwxService *JWXService) AuthService {
 	return &authService{
-		usersRepo:    usersRepo,
 		usersService: usersService,
 		jwxService:   jwxService,
 	}
@@ -44,10 +41,6 @@ func (a *authService) Login(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (
 
 	if len(loginRequest.Password) <= 3 {
 		return nil, http.BadRequestWithMessage("Please provide password")
-	}
-
-	if !a.usersService.EmailExists(loginRequest.Email) {
-		return nil, http.UnauthorizedError("E-mail or password wrong")
 	}
 
 	user, err := a.usersService.GetByEmail(loginRequest.Email)
@@ -114,7 +107,7 @@ func (a *authService) RefreshAuthToken(ctx *fiber.Ctx) (*schema.TokenResponse, e
 		ctx.Cookies(RefreshTokenCookieName, ""),
 		func(refreshToken jwt.Token) (jwt.Token, error) {
 			userID := uuid.MustParse(refreshToken.Subject())
-			if !a.usersRepo.Exists(userID) {
+			if !a.usersService.Exists(userID) {
 				return nil, http.NotFoundError("User not found")
 			}
 
@@ -143,7 +136,7 @@ func (a *authService) JWKS(ctx *fiber.Ctx) error {
 }
 
 func (a *authService) Register(registerPayload *schema.RegisterRequest) error {
-	if a.usersRepo.EmailExists(registerPayload.Email) {
+	if a.usersService.EmailExists(registerPayload.Email) {
 		return http.Conflict("E-mail is taken by someone else")
 	}
 	_, err := a.usersService.Create(&schema.NewUserRequest{
