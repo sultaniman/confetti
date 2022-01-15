@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/imanhodjaev/getout/platform/middleware"
 	"github.com/imanhodjaev/getout/platform/shared"
 )
 
@@ -15,7 +16,7 @@ func App(handler *Handler) *fiber.App {
 	system.Get("/health", handler.Health)
 
 	admin := app.Group("/admin")
-
+	admin.Use(middleware.AuthMiddleware("Authorization", handler.JWXService.JWKS()))
 	users := admin.Group("/users")
 	users.Post("/", handler.CreateUser)
 	users.Get("/:user_id", handler.GetUser)
