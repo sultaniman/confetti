@@ -9,6 +9,7 @@ const (
 	NotFound       ErrorCode = "not_found"
 	Conflict       ErrorCode = "conflict"
 	Unauthorized   ErrorCode = "unauthorized"
+	TokenExpired   ErrorCode = "token_expired"
 	Forbidden      ErrorCode = "forbidden"
 	BadRequest     ErrorCode = "bad_request"
 	ServerError    ErrorCode = "internal_error"
