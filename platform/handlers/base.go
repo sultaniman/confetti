@@ -22,5 +22,12 @@ func App(handler *Handler) *fiber.App {
 	users.Put("/:user_id/password", handler.UpdatePassword)
 	users.Delete("/:user_id", handler.DeleteUser)
 
+	auth := app.Group("/auth")
+	auth.Get("/jwks", handler.JWKS)
+	auth.Post("/logout", handler.LogOut)
+	auth.Post("/register", handler.Register)
+	auth.Post("/token", handler.Login)
+	auth.Post("/token/refresh", handler.RefreshToken)
+
 	return app
 }

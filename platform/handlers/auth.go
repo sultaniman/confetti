@@ -43,13 +43,31 @@ func (h *Handler) RefreshToken(ctx *fiber.Ctx) error {
 	return ctx.JSON(tokenResponse)
 }
 
-// LoginOut godoc
+// LogOut godoc
 // @Summary Logout user
 // @Description Logout user
 // @Tags auth
 // @Produce json
 // @Success 204 {string} nil Log out is successful
 // @Router /auth/logout [get]
-func (h *Handler) LoginOut(ctx *fiber.Ctx) error {
+func (h *Handler) LogOut(ctx *fiber.Ctx) error {
 	return h.AuthService.Logout(ctx)
+}
+
+func (h *Handler) JWKS(ctx *fiber.Ctx) error {
+	return ctx.JSON(h.JWXService.JWKS())
+}
+
+func (h *Handler) Register(ctx *fiber.Ctx) error {
+	registerPayload, err := h.Params.RegisterPayload(ctx)
+	if err != nil {
+		return err
+	}
+
+	err = h.AuthService.Register(registerPayload)
+	if err != nil {
+		return err
+	}
+
+	return ctx.SendStatus(fiber.StatusNoContent)
 }
