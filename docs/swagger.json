@@ -1,0 +1,306 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/auth/jwks": {
+            "get": {
+                "description": "Returns jwks details",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Returns jwks details",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "description": "Refresh access token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh access token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.TokenResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/shared.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "delete": {
+                "description": "Logout user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout user",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Register using email and password",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register using email and password",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/system/health": {
+            "get": {
+                "description": "Get system health status",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "system"
+                ],
+                "summary": "Get system health status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "put": {
+                "description": "Update user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update user",
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {
+                            "$ref": "#/definitions/schema.UserResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create user",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/schema.UserResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.UserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{user_id}": {
+            "get": {
+                "description": "Get user by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user by ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.UserResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/shared.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{user_id}/email": {
+            "put": {
+                "description": "Update email for user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update email for user",
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {
+                            "$ref": "#/definitions/schema.UserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{user_id}/password": {
+            "put": {
+                "description": "Update password for user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update password for user",
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {
+                            "$ref": "#/definitions/schema.UserResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "schema.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "ok": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "schema.TokenResponse": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "string"
+                },
+                "expiresIn": {
+                    "type": "integer"
+                },
+                "refreshToken": {
+                    "type": "string"
+                },
+                "tokenType": {
+                    "type": "string"
+                }
+            }
+        },
+        "schema.UserResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "fullName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "isAdmin": {
+                    "type": "boolean"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "settings": {
+                    "type": "object"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "shared.HTTPError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

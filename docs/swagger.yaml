@@ -1,0 +1,198 @@
+definitions:
+  schema.HealthResponse:
+    properties:
+      ok:
+        type: boolean
+    type: object
+  schema.TokenResponse:
+    properties:
+      accessToken:
+        type: string
+      expiresIn:
+        type: integer
+      refreshToken:
+        type: string
+      tokenType:
+        type: string
+    type: object
+  schema.UserResponse:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      fullName:
+        type: string
+      id:
+        type: string
+      isActive:
+        type: boolean
+      isAdmin:
+        type: boolean
+      provider:
+        type: string
+      settings:
+        type: object
+      updatedAt:
+        type: string
+    type: object
+  shared.HTTPError:
+    properties:
+      code:
+        type: string
+      details:
+        type: object
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/jwks:
+    get:
+      description: Returns jwks details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Returns jwks details
+      tags:
+      - auth
+  /auth/login:
+    post:
+      description: Refresh access token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.TokenResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/shared.HTTPError'
+      summary: Refresh access token
+      tags:
+      - auth
+  /auth/logout:
+    delete:
+      description: Logout user
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Logout user
+      tags:
+      - auth
+  /auth/register:
+    post:
+      description: Register using email and password
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Register using email and password
+      tags:
+      - auth
+  /system/health:
+    get:
+      description: Get system health status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.HealthResponse'
+      summary: Get system health status
+      tags:
+      - system
+  /user:
+    delete:
+      description: Delete user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.UserResponse'
+      summary: Delete user
+      tags:
+      - users
+    post:
+      description: Create user
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schema.UserResponse'
+      summary: Create user
+      tags:
+      - users
+    put:
+      description: Update user
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/schema.UserResponse'
+      summary: Update user
+      tags:
+      - users
+  /user/{user_id}:
+    get:
+      description: Get user by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.UserResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/shared.HTTPError'
+      summary: Get user by ID
+      tags:
+      - users
+  /user/{user_id}/email:
+    put:
+      description: Update email for user
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/schema.UserResponse'
+      summary: Update email for user
+      tags:
+      - users
+  /user/{user_id}/password:
+    put:
+      description: Update password for user
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/schema.UserResponse'
+      summary: Update password for user
+      tags:
+      - users
+swagger: "2.0"
