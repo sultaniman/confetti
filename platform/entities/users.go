@@ -8,7 +8,6 @@ import (
 
 type NewUser struct {
 	FullName string
-	Username string
 	Email    string
 	Password string
 	IsAdmin  bool
@@ -19,21 +18,19 @@ type NewUser struct {
 
 type UpdateUser struct {
 	FullName string
-	Username string
 	Email    string
 	Settings json.RawMessage
 }
 
 type User struct {
-	ID        uuid.UUID       `pg:"id"`
-	FullName  string          `pg:"full_name"`
-	Username  string          `pg:"username"`
-	Email     string          `pg:"email"`
-	Password  string          `pg:"password"`
-	IsAdmin   bool            `pg:"is_admin"`
-	IsActive  bool            `pg:"is_active"`
-	Settings  json.RawMessage `pg:"settings"`
-	Provider  string          `pg:"provider"`
-	CreatedAt time.Time       `pg:"created_at"`
-	UpdatedAt time.Time       `pg:"updated_at"`
+	ID        uuid.UUID       `db:"id"`
+	FullName  string          `db:"full_name"`
+	Email     string          `db:"email"`
+	Password  string          `db:"password"`
+	IsAdmin   bool            `db:"is_admin"`
+	IsActive  bool            `db:"is_active"`
+	Settings  json.RawMessage `db:"settings"`
+	Provider  string          `db:"provider"`
+	CreatedAt time.Time       `db:"created_at"`
+	UpdatedAt time.Time       `db:"updated_at"`
 }

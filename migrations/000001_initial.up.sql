@@ -5,7 +5,6 @@ CREATE TABLE users
 (
     id         UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
     full_name  VARCHAR(255)                NOT NULL,
-    username   VARCHAR(255)                NOT NULL,
     email      VARCHAR(100)                NOT NULL,
     password   VARCHAR(2048)               NOT NULL,
     is_admin   BOOL                        NOT NULL DEFAULT false,
@@ -20,7 +19,6 @@ CREATE TABLE users
 );
 
 CREATE UNIQUE INDEX ix_email ON users (lower(email));
-CREATE UNIQUE INDEX ix_username ON users (lower(username));
 CREATE INDEX ix_full_name ON users (lower(full_name));
 
 
@@ -73,7 +71,6 @@ CREATE INDEX ix_related_message ON files (message_id);
 INSERT INTO users
 VALUES (uuid_generate_v4(),
         'Full Admin',
-        'admin',
         'admin@example.com',
         'password',
         true,
