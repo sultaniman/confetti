@@ -16,7 +16,7 @@ const AccessTokenDuration = time.Hour             // 1 hour
 const RefreshTokenDuration = 24 * time.Hour * 180 // 180 days
 
 type AuthService interface {
-	Login(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (*schema.TokenResponse, error)
+	AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (*schema.TokenResponse, error)
 	RefreshAuthToken(ctx *fiber.Ctx) (*schema.TokenResponse, error)
 	Register(registerPayload *schema.RegisterRequest) error
 	Logout(ctx *fiber.Ctx) error
@@ -34,7 +34,7 @@ func NewAuthService(usersService UserService, jwxService *JWXService) AuthServic
 	}
 }
 
-func (a *authService) Login(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (*schema.TokenResponse, error) {
+func (a *authService) AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (*schema.TokenResponse, error) {
 	if len(loginRequest.Email) <= 3 {
 		return nil, http.BadRequestWithMessage("Please provide e-mail")
 	}
@@ -60,7 +60,6 @@ func (a *authService) Login(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (
 	// issue access_token (short-lived) and refresh_token (to update it)
 	now := time.Now()
 	refreshToken := jwt.New()
-
 	err = refreshToken.Set(jwt.ExpirationKey, now.Add(RefreshTokenDuration))
 	if err != nil {
 		log.Info().

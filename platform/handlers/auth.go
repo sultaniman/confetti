@@ -18,7 +18,7 @@ func (h *Handler) AuthTokenFlow(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	tokenResponse, err := h.AuthService.Login(ctx, loginPayload)
+	tokenResponse, err := h.AuthService.AccessTokenAuthFlow(ctx, loginPayload)
 	if err != nil {
 		return err
 	}
