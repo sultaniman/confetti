@@ -21,7 +21,6 @@ CREATE TABLE users
 CREATE UNIQUE INDEX ix_users_email ON users (lower(email));
 CREATE INDEX ix_users_full_name ON users (lower(full_name));
 
-
 CREATE TABLE messages
 (
     id           UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
@@ -67,6 +66,24 @@ CREATE TABLE files
 
 CREATE INDEX ix_files_owner ON files (owner_id);
 CREATE INDEX ix_files_related_message ON files (message_id);
+
+CREATE TABLE friends
+(
+    id         UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
+    user_id    UUID                        NOT NULL,
+    friend_id  UUID                        NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+
+    CONSTRAINT fk_friends_user_id
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_friends_friend_id
+        FOREIGN KEY (friend_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
 
 CREATE TABLE events
 (

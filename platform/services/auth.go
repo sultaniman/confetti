@@ -9,11 +9,9 @@ import (
 	"github.com/imanhodjaev/getout/util"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 	"time"
 )
-
-const AccessTokenDuration = time.Hour             // 1 hour
-const RefreshTokenDuration = 24 * time.Hour * 180 // 180 days
 
 type AuthService interface {
 	AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (*schema.TokenResponse, error)
@@ -60,7 +58,7 @@ func (a *authService) AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.L
 	// issue access_token (short-lived) and refresh_token (to update it)
 	now := time.Now()
 	refreshToken := jwt.New()
-	err = refreshToken.Set(jwt.ExpirationKey, now.Add(RefreshTokenDuration))
+	err = refreshToken.Set(jwt.ExpirationKey, now.Add(viper.GetDuration("refresh_token_ttl")))
 	if err != nil {
 		log.Info().
 			Str("user_id", user.ID.String()).
@@ -84,7 +82,7 @@ func (a *authService) AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.L
 	ctx.Cookie(refreshTokenCookie)
 
 	authToken := jwt.New()
-	err = authToken.Set(jwt.ExpirationKey, now.Add(AccessTokenDuration))
+	err = authToken.Set(jwt.ExpirationKey, now.Add(viper.GetDuration("access_token_ttl")))
 	if err != nil {
 		log.Info().
 			Str("user_id", user.ID.String()).
@@ -111,7 +109,7 @@ func (a *authService) RefreshAuthToken(ctx *fiber.Ctx) (*schema.TokenResponse, e
 			}
 
 			authToken := jwt.New()
-			err := authToken.Set(jwt.ExpirationKey, time.Now().Add(AccessTokenDuration))
+			err := authToken.Set(jwt.ExpirationKey, time.Now().Add(viper.GetDuration("access_token_ttl")))
 			if err != nil {
 				log.Info().
 					Str("user_id", userID.String()).
