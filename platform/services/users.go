@@ -3,11 +3,11 @@ package services
 import (
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/imanhodjaev/getout/platform/entities"
-	"github.com/imanhodjaev/getout/platform/http"
-	"github.com/imanhodjaev/getout/platform/repo"
-	"github.com/imanhodjaev/getout/platform/schema"
-	"github.com/imanhodjaev/getout/util"
+	"github.com/imanhodjaev/confetti/platform/entities"
+	"github.com/imanhodjaev/confetti/platform/http"
+	"github.com/imanhodjaev/confetti/platform/repo"
+	"github.com/imanhodjaev/confetti/platform/schema"
+	"github.com/imanhodjaev/confetti/util"
 	"github.com/omeid/pgerror"
 	"github.com/rs/zerolog/log"
 )

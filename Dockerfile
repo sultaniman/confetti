@@ -12,7 +12,7 @@ COPY . .
 RUN go generate ./...
 
 COPY main.go .
-RUN CGO_ENABLED=0 go build -o /build/getout
+RUN CGO_ENABLED=0 go build -o /build/confetti
 
 FROM scratch
 COPY --from=builder /build/ /
@@ -21,9 +21,9 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifi
 
 COPY migrations /migrations
 
-VOLUME /etc/getout
+VOLUME /etc/confetti
 
 EXPOSE 8000
 
-ENTRYPOINT ["/getout"]
+ENTRYPOINT ["/confetti"]
 CMD ["serve"]

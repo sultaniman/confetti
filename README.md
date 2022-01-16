@@ -1,1 +1,1 @@
-# 🚀 Getout API
+# 🚀 Confetti API

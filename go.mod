@@ -1,4 +1,4 @@
-module github.com/imanhodjaev/getout
+module github.com/imanhodjaev/confetti
 
 go 1.17
 

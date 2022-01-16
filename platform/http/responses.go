@@ -2,7 +2,7 @@ package http
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/imanhodjaev/getout/platform/shared"
+	"github.com/imanhodjaev/confetti/platform/shared"
 )
 
 func NotFoundError(message string) *shared.ServiceError {

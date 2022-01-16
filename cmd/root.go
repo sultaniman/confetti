@@ -7,15 +7,15 @@ import (
 	"strings"
 )
 
-const BaseURL = "https://getout.cloud"
+const BaseURL = "https://confetti.relevant.tools"
 const DefaultPort = 4000
 
 var (
 	port    int
 	rootCmd = cobra.Command{
-		Use:   "getout [command]",
-		Short: "getout",
-		Long:  "getout",
+		Use:   "confetti [command]",
+		Short: "confetti",
+		Long:  "confetti",
 		Run: func(cmd *cobra.Command, args []string) {
 			_ = cmd.Usage()
 		},

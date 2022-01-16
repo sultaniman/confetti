@@ -3,8 +3,8 @@ package handlers
 import (
 	"crypto/rsa"
 	sq "github.com/Masterminds/squirrel"
-	"github.com/imanhodjaev/getout/platform/repo"
-	"github.com/imanhodjaev/getout/platform/services"
+	"github.com/imanhodjaev/confetti/platform/repo"
+	"github.com/imanhodjaev/confetti/platform/services"
 	"github.com/jmoiron/sqlx"
 )
 

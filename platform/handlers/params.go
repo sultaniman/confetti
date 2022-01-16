@@ -3,9 +3,9 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/imanhodjaev/getout/platform/schema"
-	"github.com/imanhodjaev/getout/platform/services"
-	"github.com/imanhodjaev/getout/platform/shared"
+	"github.com/imanhodjaev/confetti/platform/schema"
+	"github.com/imanhodjaev/confetti/platform/services"
+	"github.com/imanhodjaev/confetti/platform/shared"
 )
 
 type ParamHandler struct {

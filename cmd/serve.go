@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/imanhodjaev/getout/platform/db"
-	"github.com/imanhodjaev/getout/platform/handlers"
-	"github.com/imanhodjaev/getout/platform/keys"
+	"github.com/imanhodjaev/confetti/platform/db"
+	"github.com/imanhodjaev/confetti/platform/handlers"
+	"github.com/imanhodjaev/confetti/platform/keys"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"time"
@@ -45,7 +45,7 @@ var serveCmd = &cobra.Command{
 }
 
 func init() {
-	viper.SetDefault("db_uri", "postgres://postgres:postgres@localhost:5431/getout?sslmode=disable")
+	viper.SetDefault("db_uri", "postgres://postgres:postgres@localhost:5432/confetti?sslmode=disable")
 	viper.SetDefault("database_max_open", 50)
 	viper.SetDefault("database_max_idle", 20)
 	viper.SetDefault("private_key", "")

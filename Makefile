@@ -1,4 +1,4 @@
-image := 811078382625.dkr.ecr.us-east-1.amazonaws.com/getout/getout
+image := 811078382625.dkr.ecr.us-east-1.amazonaws.com/confetti/confetti
 tag := latest
 artifact := geo
 git_hash ?= $(shell git log -1 --pretty=format:%h)

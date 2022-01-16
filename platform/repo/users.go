@@ -3,7 +3,7 @@ package repo
 import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
-	"github.com/imanhodjaev/getout/platform/entities"
+	"github.com/imanhodjaev/confetti/platform/entities"
 	"time"
 )
 

@@ -3,9 +3,9 @@ package services
 import (
 	"crypto/rsa"
 	"github.com/gofiber/fiber/v2"
-	"github.com/imanhodjaev/getout/platform/http"
-	"github.com/imanhodjaev/getout/platform/schema"
-	"github.com/imanhodjaev/getout/platform/shared"
+	"github.com/imanhodjaev/confetti/platform/http"
+	"github.com/imanhodjaev/confetti/platform/schema"
+	"github.com/imanhodjaev/confetti/platform/shared"
 	"github.com/lestrrat-go/jwx/jwa"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
