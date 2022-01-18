@@ -1,12 +1,10 @@
 package services
 
 import (
-	"bytes"
 	"github.com/imanhodjaev/confetti/platform/http"
 	"github.com/imanhodjaev/confetti/platform/repo"
 	"github.com/imanhodjaev/confetti/platform/schema"
 	"github.com/imanhodjaev/pwc/gen"
-	"image/jpeg"
 )
 
 type CardService interface {
@@ -25,13 +23,7 @@ func NewCardService(usersRepo repo.UserRepo) CardService {
 }
 
 func (c cardService) GenerateCard(options *schema.CardOptions) (*schema.NewCardResponse, error) {
-	canvas, card, err := gen.GenerateClassicCard(options.IncludeSymbols, options.DigitsArea)
-	if err != nil {
-		return nil, http.InternalError(err)
-	}
-
-	buf := new(bytes.Buffer)
-	err = jpeg.Encode(buf, canvas.Context.Image(), nil)
+	_, card, err := gen.GenerateClassicCard(options.IncludeSymbols, options.DigitsArea, false)
 	if err != nil {
 		return nil, http.InternalError(err)
 	}
@@ -40,7 +32,6 @@ func (c cardService) GenerateCard(options *schema.CardOptions) (*schema.NewCardR
 		Data:      string(card.GetBytes()),
 		Key:       card.Passphrase,
 		ExpiresIn: 0,
-		Image:     buf.Bytes(),
 	}, nil
 }
 

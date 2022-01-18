@@ -514,6 +514,10 @@ github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imanhodjaev/pwc v0.0.0-20220116202541-0ec5e536b2b8 h1:BR8+kuhJG5yirY/e5s5rTFNNv4kkmoQ/toTTtjlCOEQ=
 github.com/imanhodjaev/pwc v0.0.0-20220116202541-0ec5e536b2b8/go.mod h1:WKtJwSJl68A+TnKWC7Wuok9+Knf/TwsK3Ef029OkWOA=
+github.com/imanhodjaev/pwc v0.0.0-20220117093828-616afe2f6775 h1:YjV2QZMbtdkiY0F4/7XqGKyCiNp+EdvEsPCfOe6UkQI=
+github.com/imanhodjaev/pwc v0.0.0-20220117093828-616afe2f6775/go.mod h1:WKtJwSJl68A+TnKWC7Wuok9+Knf/TwsK3Ef029OkWOA=
+github.com/imanhodjaev/pwc v0.0.0-20220118212941-03e70b6ef23f h1:Gr9oaTuBKL2jqso4vhdxVlOmmkWx6a1gW/z5KGjemY4=
+github.com/imanhodjaev/pwc v0.0.0-20220118212941-03e70b6ef23f/go.mod h1:WKtJwSJl68A+TnKWC7Wuok9+Knf/TwsK3Ef029OkWOA=
 github.com/imdario/mergo v0.3.5/go.mod h1:2EnlNZ0deacrJVfApfmtdGgDfMuh/nq6Ok1EcJh5FfA=
 github.com/imdario/mergo v0.3.8/go.mod h1:2EnlNZ0deacrJVfApfmtdGgDfMuh/nq6Ok1EcJh5FfA=
 github.com/imdario/mergo v0.3.10/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=

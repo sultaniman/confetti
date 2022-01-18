@@ -14,7 +14,6 @@ type NewCardResponse struct {
 	Data      string
 	Key       string
 	ExpiresIn int64
-	Image     []byte
 }
 
 type NewCardRequest struct {

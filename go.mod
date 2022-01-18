@@ -45,7 +45,7 @@ require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/gookit/color v1.5.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/imanhodjaev/pwc v0.0.0-20220116202541-0ec5e536b2b8 // indirect
+	github.com/imanhodjaev/pwc v0.0.0-20220118212941-03e70b6ef23f // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20160803190731-bd40a432e4c7 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
