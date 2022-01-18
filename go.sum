@@ -518,6 +518,8 @@ github.com/imanhodjaev/pwc v0.0.0-20220117093828-616afe2f6775 h1:YjV2QZMbtdkiY0F
 github.com/imanhodjaev/pwc v0.0.0-20220117093828-616afe2f6775/go.mod h1:WKtJwSJl68A+TnKWC7Wuok9+Knf/TwsK3Ef029OkWOA=
 github.com/imanhodjaev/pwc v0.0.0-20220118212941-03e70b6ef23f h1:Gr9oaTuBKL2jqso4vhdxVlOmmkWx6a1gW/z5KGjemY4=
 github.com/imanhodjaev/pwc v0.0.0-20220118212941-03e70b6ef23f/go.mod h1:WKtJwSJl68A+TnKWC7Wuok9+Knf/TwsK3Ef029OkWOA=
+github.com/imanhodjaev/pwc v0.0.0-20220118215439-551851ee64c1 h1:95oEKP2essJnErJhI1U2ieE9VrShhRObnr0afnwVaYc=
+github.com/imanhodjaev/pwc v0.0.0-20220118215439-551851ee64c1/go.mod h1:WKtJwSJl68A+TnKWC7Wuok9+Knf/TwsK3Ef029OkWOA=
 github.com/imdario/mergo v0.3.5/go.mod h1:2EnlNZ0deacrJVfApfmtdGgDfMuh/nq6Ok1EcJh5FfA=
 github.com/imdario/mergo v0.3.8/go.mod h1:2EnlNZ0deacrJVfApfmtdGgDfMuh/nq6Ok1EcJh5FfA=
 github.com/imdario/mergo v0.3.10/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
