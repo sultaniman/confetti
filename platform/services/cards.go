@@ -1,12 +1,16 @@
 package services
 
 import (
-	"fmt"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/sha512"
+	"github.com/google/uuid"
 	"github.com/imanhodjaev/confetti/platform/http"
 	"github.com/imanhodjaev/confetti/platform/repo"
 	"github.com/imanhodjaev/confetti/platform/schema"
 	"github.com/imanhodjaev/pwc/crypto"
 	"github.com/imanhodjaev/pwc/gen"
+	"time"
 )
 
 type CardService interface {
@@ -15,12 +19,14 @@ type CardService interface {
 }
 
 type cardService struct {
-	usersRepo repo.UserRepo
+	privateKey *rsa.PrivateKey
+	usersRepo  repo.UserRepo
 }
 
-func NewCardService(usersRepo repo.UserRepo) CardService {
+func NewCardService(usersRepo repo.UserRepo, privateKey *rsa.PrivateKey) CardService {
 	return &cardService{
-		usersRepo: usersRepo,
+		privateKey: privateKey,
+		usersRepo:  usersRepo,
 	}
 }
 
@@ -38,14 +44,26 @@ func (c *cardService) GenerateCard(options *schema.CardOptions) (*schema.NewCard
 }
 
 func (c *cardService) Save(newCard *schema.NewCardRequest) (*schema.CardResponse, error) {
-	// TODO encrypt card contents with it's key and encrypt key with rsa key and save
 	message := crypto.NewMessage(newCard.Data, "")
-	encrypted, err := message.Encrypt(newCard.Key)
+	encryptedData, err := message.Encrypt(newCard.Key)
 	if err != nil {
 		// TODO: maybe custom error
 		return nil, http.InternalError(err)
 	}
 
-	fmt.Println(encrypted)
-	return nil, err
+	hash := sha512.New()
+	encryptedKey, err := rsa.EncryptOAEP(hash, rand.Reader, &c.privateKey.PublicKey, []byte(newCard.Key), nil)
+	if err != nil {
+		// TODO: maybe custom error
+		return nil, http.InternalError(err)
+	}
+
+	// TODO: save
+	return &schema.CardResponse{
+		UserId:        uuid.New(),
+		EncryptedData: encryptedData,
+		EncryptedKey:  string(encryptedKey),
+		ExpiresIn:     newCard.ExpiresIn,
+		CreatedAt:     time.Now(),
+	}, err
 }
