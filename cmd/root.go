@@ -39,7 +39,7 @@ func init() {
 
 func configure() {
 	viper.SetDefault("base_url", BaseURL)
-	viper.SetEnvPrefix("GO")
+	viper.SetEnvPrefix("CO")
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "_"))
 	viper.AllowEmptyEnv(true)
 	viper.AutomaticEnv()

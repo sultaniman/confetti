@@ -25,6 +25,9 @@ func App(handler *Handler) *fiber.App {
 	users.Put("/:user_id/password", handler.UpdatePassword)
 	users.Delete("/:user_id", handler.DeleteUser)
 
+	cards := app.Group("/c")
+	cards.Post("/new", handler.GenerateCard)
+
 	auth := app.Group("/auth")
 	auth.Get("/jwks", handler.JWKS)
 	auth.Post("/register", handler.Register)

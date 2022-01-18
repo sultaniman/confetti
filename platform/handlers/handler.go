@@ -12,6 +12,7 @@ type Handler struct {
 	BaseRepo      *repo.Repo
 	UserRepo      repo.UserRepo
 	UserService   services.UserService
+	CardService   services.CardService
 	AuthService   services.AuthService
 	JWXService    *services.JWXService
 	Params        *ParamHandler
@@ -40,6 +41,7 @@ func NewHandler(db *sqlx.DB, key *rsa.PrivateKey) (*Handler, error) {
 		BaseRepo:    baseRepo,
 		UserRepo:    userRepo,
 		UserService: userService,
+		CardService: services.NewCardService(userRepo),
 		AuthService: services.NewAuthService(userService, jwxService),
 		JWXService:  jwxService,
 		Params: &ParamHandler{

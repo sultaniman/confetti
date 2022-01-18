@@ -20,6 +20,23 @@ CREATE TABLE users
 CREATE UNIQUE INDEX ix_users_email ON users (lower(email));
 CREATE INDEX ix_users_full_name ON users (lower(full_name));
 
+CREATE TABLE cards
+(
+    id             UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
+    user_id        UUID                        NOT NULL,
+    encrypted_data TEXT                        NOT NULL,
+    encrypted_key  VARCHAR(2048)               NOT NULL,
+    expires_in     BIGINT                      NULL     DEFAULT 0,
+    created_at     TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+
+    CONSTRAINT fk_cards_user
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
+
+CREATE INDEX ix_cards_user_id ON cards (user_id);
+
 CREATE TABLE events
 (
     id         UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),

@@ -117,3 +117,18 @@ func (p *ParamHandler) RegisterPayload(ctx *fiber.Ctx) (*schema.RegisterRequest,
 
 	return registerRequestPayload, nil
 }
+
+// Card params
+
+func (p *ParamHandler) CardOptionsPayload(c *fiber.Ctx) (*schema.CardOptions, error) {
+	cardOptions := new(schema.CardOptions)
+	if err := c.BodyParser(cardOptions); err != nil {
+		return nil, &shared.ServiceError{
+			Response:   err,
+			StatusCode: fiber.StatusInternalServerError,
+			ErrorCode:  shared.ServerError,
+		}
+	}
+
+	return cardOptions, nil
+}
