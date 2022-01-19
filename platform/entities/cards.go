@@ -23,4 +23,5 @@ type Card struct {
 	EncryptedData string    `db:"encrypted_data"`
 	EncryptedKey  string    `db:"encrypted_key"`
 	CreatedAt     time.Time `db:"created_at"`
+	UpdatedAt     time.Time `db:"updated_at"`
 }
