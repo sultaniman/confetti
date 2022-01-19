@@ -85,3 +85,38 @@ func (h *Handler) GetCard(ctx *fiber.Ctx) error {
 		Status(fiber.StatusCreated).
 		JSON(card)
 }
+
+// DeleteCard godoc
+// @Summary Delete card by id
+// @Description Delete card by id
+// @Tags cards
+// @Produce json
+// @Success 204 {string} nil deletion is successful
+// @Router / [delete]
+func (h *Handler) DeleteCard(ctx *fiber.Ctx) error {
+	cardId, err := h.Params.GetUUIDParam(ctx, "card_id")
+	if err != nil {
+		return err
+	}
+
+	userId, err := h.Params.GetUserIdFromLocals(ctx)
+	if err != nil {
+		return err
+	}
+
+	card, err := h.CardService.Get(*cardId)
+	if err != nil {
+		return err
+	}
+
+	if card.UserId.String() != userId.String() {
+		return http.NotFoundError("Card not found")
+	}
+
+	err = h.CardService.Delete(*cardId)
+	if err != nil {
+		return err
+	}
+
+	return ctx.SendStatus(fiber.StatusNoContent)
+}
