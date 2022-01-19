@@ -109,3 +109,11 @@ func InsecurePasswordError() *shared.ServiceError {
 		UseResponseAsMessage: shared.Bool(true),
 	}
 }
+
+func EncryptionError(err error) *shared.ServiceError {
+	return &shared.ServiceError{
+		Response:   err,
+		StatusCode: fiber.StatusInternalServerError,
+		ErrorCode:  shared.ServerError,
+	}
+}
