@@ -16,13 +16,15 @@ type NewCardResponse struct {
 }
 
 type NewCardRequest struct {
-	Data string
-	Key  string
+	Title string
+	Data  string
+	Key   string
 }
 
 type CardResponse struct {
 	ID            uuid.UUID
 	UserId        uuid.UUID
+	Title         string
 	EncryptedData string
 	EncryptedKey  string
 	CreatedAt     time.Time
