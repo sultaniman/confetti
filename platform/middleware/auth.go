@@ -37,7 +37,7 @@ func AuthMiddleware(authHeader string, jwks *jwk.Set) fiber.Handler {
 			}
 		}
 
-		ctx.Locals("userID", payload.Subject())
+		ctx.Locals("user_id", payload.Subject())
 		return ctx.Next()
 	}
 }

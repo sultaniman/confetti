@@ -95,6 +95,7 @@ func (s *userService) Create(newUserRequest *schema.NewUserRequest) (*schema.Use
 		FullName: newUserRequest.FullName,
 		Email:    newUserRequest.Email,
 		Password: password,
+		IsActive: true,
 		Settings: newUserRequest.Settings,
 		Provider: newUserRequest.Provider,
 	})

@@ -58,7 +58,8 @@ func (a *authService) AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.L
 	// issue access_token (short-lived) and refresh_token (to update it)
 	now := time.Now()
 	refreshToken := jwt.New()
-	err = refreshToken.Set(jwt.ExpirationKey, now.Add(viper.GetDuration("refresh_token_ttl")))
+	refreshTokenDuration := viper.GetDuration("refresh_token_ttl")
+	err = refreshToken.Set(jwt.ExpirationKey, now.Add(refreshTokenDuration))
 	if err != nil {
 		log.Info().
 			Str("user_id", user.ID.String()).
@@ -82,14 +83,15 @@ func (a *authService) AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.L
 	ctx.Cookie(refreshTokenCookie)
 
 	authToken := jwt.New()
-	err = authToken.Set(jwt.ExpirationKey, now.Add(viper.GetDuration("access_token_ttl")))
+	accessTokenDuration := viper.GetDuration("access_token_ttl")
+	err = authToken.Set(jwt.ExpirationKey, now.Add(accessTokenDuration))
 	if err != nil {
 		log.Info().
 			Str("user_id", user.ID.String()).
 			Msg(fmt.Sprintf("JWT Access token unable to set %s", jwt.ExpirationKey))
 	}
 
-	err = authToken.Set(jwt.SubjectKey, user.ID)
+	err = authToken.Set(jwt.SubjectKey, user.ID.String())
 	if err != nil {
 		log.Info().
 			Str("user_id", user.ID.String()).

@@ -59,7 +59,6 @@ func (r *userRepo) GetByEmail(email string) (*entities.User, error) {
 }
 
 func (r *userRepo) Create(user *entities.NewUser) (*entities.User, error) {
-	var userRow *entities.User
 	query, args, err := r.Base.
 		Insert(
 			"users",
@@ -90,6 +89,7 @@ func (r *userRepo) Create(user *entities.NewUser) (*entities.User, error) {
 		return nil, err
 	}
 
+	userRow := &entities.User{}
 	return userRow, r.Base.DB.Get(userRow, query, args...)
 }
 
