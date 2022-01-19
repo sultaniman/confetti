@@ -30,6 +30,7 @@ func NewHandler(db *sqlx.DB, key *rsa.PrivateKey) (*Handler, error) {
 	}
 
 	userRepo := repo.NewUserRepo(baseRepo)
+	cardRepo := repo.NewCardRepo(baseRepo)
 	userService := services.NewUserService(userRepo)
 	jwxService, err := services.NewJWXService(key)
 	if err != nil {
@@ -40,7 +41,7 @@ func NewHandler(db *sqlx.DB, key *rsa.PrivateKey) (*Handler, error) {
 		BaseRepo:    baseRepo,
 		UserRepo:    userRepo,
 		UserService: userService,
-		CardService: services.NewCardService(userRepo),
+		CardService: services.NewCardService(userRepo, cardRepo, key),
 		AuthService: services.NewAuthService(userService, jwxService),
 		JWXService:  jwxService,
 		Params: &ParamHandler{
