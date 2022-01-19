@@ -4,28 +4,32 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha512"
+	"encoding/base64"
 	"github.com/google/uuid"
+	"github.com/imanhodjaev/confetti/platform/entities"
 	"github.com/imanhodjaev/confetti/platform/http"
 	"github.com/imanhodjaev/confetti/platform/repo"
 	"github.com/imanhodjaev/confetti/platform/schema"
 	"github.com/imanhodjaev/pwc/crypto"
 	"github.com/imanhodjaev/pwc/gen"
-	"time"
 )
 
 type CardService interface {
 	GenerateCard(options *schema.CardOptions) (*schema.NewCardResponse, error)
-	Save(newCard *schema.NewCardRequest) (*schema.CardResponse, error)
+	Create(userId uuid.UUID, newCard *schema.NewCardRequest) (*schema.CardResponse, error)
+	Delete(cardId uuid.UUID) error
 }
 
 type cardService struct {
 	privateKey *rsa.PrivateKey
+	cardsRepo  repo.CardRepo
 	usersRepo  repo.UserRepo
 }
 
-func NewCardService(usersRepo repo.UserRepo, privateKey *rsa.PrivateKey) CardService {
+func NewCardService(usersRepo repo.UserRepo, cardsRepo repo.CardRepo, privateKey *rsa.PrivateKey) CardService {
 	return &cardService{
 		privateKey: privateKey,
+		cardsRepo:  cardsRepo,
 		usersRepo:  usersRepo,
 	}
 }
@@ -37,33 +41,54 @@ func (c *cardService) GenerateCard(options *schema.CardOptions) (*schema.NewCard
 	}
 
 	return &schema.NewCardResponse{
-		Data:      string(card.GetBytes()),
-		Key:       card.Passphrase,
-		ExpiresIn: 0,
+		Data: string(card.GetBytes()),
+		Key:  card.Passphrase,
 	}, nil
 }
 
-func (c *cardService) Save(newCard *schema.NewCardRequest) (*schema.CardResponse, error) {
+func (c *cardService) Create(userId uuid.UUID, newCard *schema.NewCardRequest) (*schema.CardResponse, error) {
 	message := crypto.NewMessage(newCard.Data, "")
 	encryptedData, err := message.Encrypt(newCard.Key)
 	if err != nil {
-		// TODO: maybe custom error
-		return nil, http.InternalError(err)
+		return nil, http.EncryptionError(err)
 	}
 
 	hash := sha512.New()
 	encryptedKey, err := rsa.EncryptOAEP(hash, rand.Reader, &c.privateKey.PublicKey, []byte(newCard.Key), nil)
 	if err != nil {
-		// TODO: maybe custom error
+		return nil, http.EncryptionError(err)
+	}
+
+	card, err := c.cardsRepo.Create(&entities.NewCard{
+		UserId: userId,
+		Title:  newCard.Title,
+		Data:   base64.StdEncoding.EncodeToString([]byte(encryptedData)),
+		Key:    base64.StdEncoding.EncodeToString(encryptedKey),
+	})
+
+	if err != nil {
 		return nil, http.InternalError(err)
 	}
 
-	// TODO: save
+	return c.cardToResponse(card), nil
+}
+
+func (c *cardService) Delete(cardId uuid.UUID) error {
+	err := c.cardsRepo.Delete(cardId)
+	if err != nil {
+		return http.InternalError(err)
+	}
+
+	return nil
+}
+
+func (c *cardService) cardToResponse(card *entities.Card) *schema.CardResponse {
 	return &schema.CardResponse{
-		UserId:        uuid.New(),
-		EncryptedData: encryptedData,
-		EncryptedKey:  string(encryptedKey),
-		ExpiresIn:     newCard.ExpiresIn,
-		CreatedAt:     time.Now(),
-	}, err
+		ID:            card.ID,
+		UserId:        card.UserId,
+		EncryptedData: card.EncryptedData,
+		EncryptedKey:  card.EncryptedKey,
+		CreatedAt:     card.CreatedAt,
+		UpdatedAt:     card.UpdatedAt,
+	}
 }

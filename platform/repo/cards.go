@@ -63,7 +63,7 @@ func (c *cardRepo) Create(card *entities.NewCard) (*entities.Card, error) {
 		return nil, err
 	}
 
-	var cardRow *entities.Card
+	cardRow := new(entities.Card)
 	return cardRow, c.Base.DB.Get(cardRow, query, args...)
 }
 
