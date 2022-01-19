@@ -76,6 +76,6 @@ func (c *cardRepo) Delete(id uuid.UUID) error {
 		return err
 	}
 
-	_, err = c.Base.DB.Exec(query, args...)
-	return err
+	card := new(entities.Card)
+	return c.Base.DB.Get(card, query, args...)
 }
