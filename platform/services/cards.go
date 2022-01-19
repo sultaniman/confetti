@@ -16,6 +16,7 @@ import (
 
 type CardService interface {
 	GenerateCard(options *schema.CardOptions) (*schema.NewCardResponse, error)
+	Get(cardId uuid.UUID) (*schema.CardResponse, error)
 	Create(userId uuid.UUID, newCard *schema.NewCardRequest) (*schema.CardResponse, error)
 	Delete(cardId uuid.UUID) error
 }
@@ -44,6 +45,15 @@ func (c *cardService) GenerateCard(options *schema.CardOptions) (*schema.NewCard
 		Data: string(card.GetBytes()),
 		Key:  card.Passphrase,
 	}, nil
+}
+
+func (c *cardService) Get(cardId uuid.UUID) (*schema.CardResponse, error) {
+	card, err := c.cardsRepo.Get(cardId)
+	if err != nil {
+		return nil, http.InternalError(err)
+	}
+
+	return c.cardToResponse(card), nil
 }
 
 func (c *cardService) Create(userId uuid.UUID, newCard *schema.NewCardRequest) (*schema.CardResponse, error) {

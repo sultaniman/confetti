@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/imanhodjaev/confetti/platform/http"
 )
 
 // GenerateCard godoc
@@ -46,6 +47,38 @@ func (h *Handler) CreateCard(ctx *fiber.Ctx) error {
 	card, err := h.CardService.Create(*userId, newCardRequest)
 	if err != nil {
 		return err
+	}
+
+	return ctx.
+		Status(fiber.StatusCreated).
+		JSON(card)
+}
+
+// GetCard godoc
+// @Summary Get card by id
+// @Description Get card by id
+// @Tags cards
+// @Produce json
+// @Success 200 {object} schema.CardResponse
+// @Router / [get]
+func (h *Handler) GetCard(ctx *fiber.Ctx) error {
+	cardId, err := h.Params.GetUUIDParam(ctx, "card_id")
+	if err != nil {
+		return err
+	}
+
+	userId, err := h.Params.GetUserIdFromLocals(ctx)
+	if err != nil {
+		return err
+	}
+
+	card, err := h.CardService.Get(*cardId)
+	if err != nil {
+		return err
+	}
+
+	if card.UserId.String() != userId.String() {
+		return http.NotFoundError("Card not found")
 	}
 
 	return ctx.
