@@ -40,8 +40,8 @@ func (r *userRepo) Get(id uuid.UUID) (*entities.User, error) {
 		return nil, err
 	}
 
-	var user entities.User
-	return &user, r.Base.DB.Get(&user, query, args...)
+	user := new(entities.User)
+	return user, r.Base.DB.Get(user, query, args...)
 }
 
 func (r *userRepo) GetByEmail(email string) (*entities.User, error) {
@@ -54,8 +54,8 @@ func (r *userRepo) GetByEmail(email string) (*entities.User, error) {
 		return nil, err
 	}
 
-	var user entities.User
-	return &user, r.Base.DB.Get(&user, query, args...)
+	user := new(entities.User)
+	return user, r.Base.DB.Get(user, query, args...)
 }
 
 func (r *userRepo) Create(user *entities.NewUser) (*entities.User, error) {
@@ -89,12 +89,11 @@ func (r *userRepo) Create(user *entities.NewUser) (*entities.User, error) {
 		return nil, err
 	}
 
-	userRow := &entities.User{}
+	userRow := new(entities.User)
 	return userRow, r.Base.DB.Get(userRow, query, args...)
 }
 
 func (r *userRepo) Update(userId uuid.UUID, user *entities.UpdateUser) (*entities.User, error) {
-	var userRow *entities.User
 	querySet := r.Base.
 		Update("users", true).
 		Where(sq.Eq{"id": userId})
@@ -112,11 +111,11 @@ func (r *userRepo) Update(userId uuid.UUID, user *entities.UpdateUser) (*entitie
 		return nil, err
 	}
 
+	userRow := new(entities.User)
 	return userRow, r.Base.DB.Get(userRow, query, args...)
 }
 
 func (r *userRepo) Exists(userId uuid.UUID) bool {
-	var userCount int
 	query, args, err := r.Base.
 		Count("users", sq.Eq{"id": userId}).
 		ToSql()
@@ -125,6 +124,7 @@ func (r *userRepo) Exists(userId uuid.UUID) bool {
 		return false
 	}
 
+	userCount := 0
 	err = r.Base.DB.Get(&userCount, query, args...)
 	if err != nil {
 		return false
@@ -134,7 +134,6 @@ func (r *userRepo) Exists(userId uuid.UUID) bool {
 }
 
 func (r *userRepo) EmailExists(email string) bool {
-	var userCount int
 	query, args, err := r.Base.
 		Count("users", sq.Eq{"email": email}).
 		ToSql()
@@ -143,6 +142,7 @@ func (r *userRepo) EmailExists(email string) bool {
 		return false
 	}
 
+	userCount := 0
 	err = r.Base.DB.Get(&userCount, query, args...)
 	if err != nil {
 		return false
@@ -152,7 +152,6 @@ func (r *userRepo) EmailExists(email string) bool {
 }
 
 func (r *userRepo) UpdateEmail(userId uuid.UUID, newEmail string) (*entities.User, error) {
-	var userRow *entities.User
 	query, args, err := r.Base.
 		Update("users", true).
 		Where(sq.Eq{"id": userId}).
@@ -163,11 +162,11 @@ func (r *userRepo) UpdateEmail(userId uuid.UUID, newEmail string) (*entities.Use
 		return nil, err
 	}
 
+	userRow := new(entities.User)
 	return userRow, r.Base.DB.Get(userRow, query, args...)
 }
 
 func (r *userRepo) UpdatePassword(userId uuid.UUID, newPassword string) (*entities.User, error) {
-	var userRow *entities.User
 	query, args, err := r.Base.
 		Update("users", true).
 		Where(sq.Eq{"id": userId}).
@@ -178,11 +177,11 @@ func (r *userRepo) UpdatePassword(userId uuid.UUID, newPassword string) (*entiti
 		return nil, err
 	}
 
+	userRow := new(entities.User)
 	return userRow, r.Base.DB.Get(userRow, query, args...)
 }
 
 func (r *userRepo) Delete(id uuid.UUID) (*entities.User, error) {
-	var user *entities.User
 	query, args, err := r.Base.
 		Delete("users", sq.Eq{"id": id}).
 		ToSql()
@@ -191,5 +190,6 @@ func (r *userRepo) Delete(id uuid.UUID) (*entities.User, error) {
 		return nil, err
 	}
 
+	user := new(entities.User)
 	return user, r.Base.DB.Get(user, query, args...)
 }

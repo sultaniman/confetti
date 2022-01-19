@@ -34,8 +34,8 @@ func (c *cardRepo) Get(id uuid.UUID) (*entities.Card, error) {
 		return nil, err
 	}
 
-	var card entities.Card
-	return &card, c.Base.DB.Get(&card, query, args...)
+	card := new(entities.Card)
+	return card, c.Base.DB.Get(card, query, args...)
 }
 
 func (c *cardRepo) Create(card *entities.NewCard) (*entities.Card, error) {
@@ -76,6 +76,6 @@ func (c *cardRepo) Delete(id uuid.UUID) error {
 		return err
 	}
 
-	var card *entities.Card
+	card := new(entities.Card)
 	return c.Base.DB.Get(card, query, args...)
 }
