@@ -7,16 +7,22 @@ import (
 func ErrorHandler(c *fiber.Ctx, err error) error {
 	switch e := err.(type) {
 	case *ServiceError:
+		details := e.Response
+		errMsg := e.Error()
+		if e.Response == errMsg {
+			details = nil
+		}
+
 		return c.
 			Status(e.StatusCode).
 			JSON(&HTTPError{
 				Code:    e.ErrorCode,
-				Message: e.Error(),
-				Details: e.Response,
+				Message: errMsg,
+				Details: details,
 			})
 	default:
 		return c.
 			Status(fiber.StatusInternalServerError).
-			JSON(ServerErrorResponse(err, ""))
+			JSON(ServerErrorResponse(err, ServerError))
 	}
 }
