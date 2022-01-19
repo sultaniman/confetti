@@ -13,8 +13,8 @@ CREATE TABLE users
     -- 'auth' is default, other authentication providers
     -- for example can be one of google, twitter etc.
     provider   VARCHAR(56)                 NULL     DEFAULT 'auth',
-    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
-    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP)
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP)
 );
 
 CREATE UNIQUE INDEX ix_users_email ON users (lower(email));
@@ -24,10 +24,11 @@ CREATE TABLE cards
 (
     id             UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
     user_id        UUID                        NOT NULL,
+    title          VARCHAR(255)                NOT NULL,
     encrypted_data TEXT                        NOT NULL,
     encrypted_key  VARCHAR(2048)               NOT NULL,
-    expires_in     BIGINT                      NULL     DEFAULT 0,
     created_at     TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+    updated_at     TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
 
     CONSTRAINT fk_cards_user
         FOREIGN KEY (user_id)
@@ -43,7 +44,7 @@ CREATE TABLE events
     action     VARCHAR(20)                 NOT NULL, -- create:user, update:user etc.
     context    VARCHAR(20)                 NULL,     -- handler:users service:webhooks etc.
     source     VARCHAR(40)                 NULL,     -- user id, record id etc.
-    data       JSONB                       NOT NULL DEFAULT '{}'::jsonb,
+    data       JSONB                       NULL     DEFAULT '{}'::jsonb,
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
     expires_at TIMESTAMP WITHOUT TIME ZONE NULL
 );

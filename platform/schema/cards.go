@@ -11,15 +11,13 @@ type CardOptions struct {
 }
 
 type NewCardResponse struct {
-	Data      string
-	Key       string
-	ExpiresIn int64
+	Data string
+	Key  string
 }
 
 type NewCardRequest struct {
-	Data      string
-	Key       string
-	ExpiresIn int64
+	Data string
+	Key  string
 }
 
 type CardResponse struct {
@@ -27,6 +25,6 @@ type CardResponse struct {
 	UserId        uuid.UUID
 	EncryptedData string
 	EncryptedKey  string
-	ExpiresIn     int64
 	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }

@@ -6,21 +6,21 @@ import (
 )
 
 type NewCard struct {
-	UserId    uuid.UUID
-	Data      string
-	Key       string
-	ExpiresIn int64
+	UserId uuid.UUID
+	Title  string
+	Data   string
+	Key    string
 }
 
-type ExpirationUpdate struct {
-	ExpiresIn int64
+type TitleUpdate struct {
+	Title string
 }
 
 type Card struct {
 	ID            uuid.UUID `db:"id"`
 	UserId        uuid.UUID `db:"user_id"`
+	Title         string    `db:"title"`
 	EncryptedData string    `db:"encrypted_data"`
 	EncryptedKey  string    `db:"encrypted_key"`
-	ExpiresIn     int64     `db:"expires_in"`
 	CreatedAt     time.Time `db:"created_at"`
 }
