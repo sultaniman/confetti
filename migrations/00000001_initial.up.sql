@@ -8,7 +8,7 @@ CREATE TABLE users
     password   VARCHAR(2048)               NOT NULL,
     is_admin   BOOL                        NOT NULL DEFAULT false,
     is_active  BOOL                        NOT NULL DEFAULT false,
-    settings   JSONB                       NOT NULL DEFAULT '{}'::jsonb,
+    settings   JSONB                       NULL     DEFAULT '{}'::jsonb,
 
     -- 'auth' is default, other authentication providers
     -- for example can be one of google, twitter etc.
