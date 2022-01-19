@@ -12,11 +12,17 @@ func App(handler *Handler) *fiber.App {
 		ErrorHandler:          shared.ErrorHandler,
 	})
 
+	authMiddleware := middleware.AuthMiddleware(
+		"Authorization",
+		handler.JWXService.JWKS(),
+	)
+
 	system := app.Group("/system")
 	system.Get("/health", handler.Health)
 
 	admin := app.Group("/admin")
-	admin.Use(middleware.AuthMiddleware("Authorization", handler.JWXService.JWKS()))
+	admin.Use(authMiddleware)
+
 	users := admin.Group("/users")
 	users.Post("/", handler.CreateUser)
 	users.Get("/:user_id", handler.GetUser)
@@ -26,6 +32,12 @@ func App(handler *Handler) *fiber.App {
 	users.Delete("/:user_id", handler.DeleteUser)
 
 	cards := app.Group("/c")
+	cards.Use(authMiddleware)
+	cards.Post("/", handler.CreateCard)
+	cards.Get("/:card_id", handler.CreateCard)
+	cards.Delete("/:card_id", handler.CreateCard)
+	cards.Put("/:card_id", handler.CreateCard)
+	cards.Get("/:card_id/decrypt", handler.CreateCard)
 	cards.Post("/new", handler.GenerateCard)
 
 	auth := app.Group("/auth")
