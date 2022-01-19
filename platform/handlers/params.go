@@ -40,6 +40,19 @@ func (p *ParamHandler) GetUserFromLocals(c *fiber.Ctx) (*schema.UserResponse, er
 	return p.UserService.Get(userID)
 }
 
+func (p *ParamHandler) GetUserIdFromLocals(c *fiber.Ctx) (*uuid.UUID, error) {
+	userID, err := uuid.Parse(c.Locals("user_id").(string))
+	if err != nil {
+		return nil, &shared.ServiceError{
+			Response:   err,
+			StatusCode: fiber.StatusInternalServerError,
+			ErrorCode:  shared.ServerError,
+		}
+	}
+
+	return &userID, nil
+}
+
 func (p *ParamHandler) CreateUserPayload(c *fiber.Ctx) (*schema.NewUserRequest, error) {
 	newUser := new(schema.NewUserRequest)
 	if err := c.BodyParser(newUser); err != nil {
@@ -131,4 +144,17 @@ func (p *ParamHandler) CardOptionsPayload(c *fiber.Ctx) (*schema.CardOptions, er
 	}
 
 	return cardOptions, nil
+}
+
+func (p *ParamHandler) CreateCardPayload(c *fiber.Ctx) (*schema.NewCardRequest, error) {
+	newCard := new(schema.NewCardRequest)
+	if err := c.BodyParser(newCard); err != nil {
+		return nil, &shared.ServiceError{
+			Response:   err,
+			StatusCode: fiber.StatusInternalServerError,
+			ErrorCode:  shared.ServerError,
+		}
+	}
+
+	return newCard, nil
 }
