@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha512"
+	"database/sql"
 	"encoding/base64"
 	"github.com/google/uuid"
 	"github.com/imanhodjaev/confetti/platform/entities"
@@ -15,7 +16,7 @@ import (
 )
 
 type CardService interface {
-	GenerateCard(options *schema.CardOptions) (*schema.NewCardResponse, error)
+	Generate(options *schema.CardOptions) (*schema.NewCardResponse, error)
 	Get(cardId uuid.UUID) (*schema.CardResponse, error)
 	Create(userId uuid.UUID, newCard *schema.NewCardRequest) (*schema.CardResponse, error)
 	Delete(cardId uuid.UUID) error
@@ -35,7 +36,7 @@ func NewCardService(usersRepo repo.UserRepo, cardsRepo repo.CardRepo, privateKey
 	}
 }
 
-func (c *cardService) GenerateCard(options *schema.CardOptions) (*schema.NewCardResponse, error) {
+func (c *cardService) Generate(options *schema.CardOptions) (*schema.NewCardResponse, error) {
 	_, card, err := gen.GenerateClassicCard(options.IncludeSymbols, options.DigitsArea, false)
 	if err != nil {
 		return nil, http.InternalError(err)
@@ -50,7 +51,7 @@ func (c *cardService) GenerateCard(options *schema.CardOptions) (*schema.NewCard
 func (c *cardService) Get(cardId uuid.UUID) (*schema.CardResponse, error) {
 	card, err := c.cardsRepo.Get(cardId)
 	if err != nil {
-		return nil, http.InternalError(err)
+		return nil, c.handleError(err)
 	}
 
 	return c.cardToResponse(card), nil
@@ -86,7 +87,7 @@ func (c *cardService) Create(userId uuid.UUID, newCard *schema.NewCardRequest) (
 func (c *cardService) Delete(cardId uuid.UUID) error {
 	err := c.cardsRepo.Delete(cardId)
 	if err != nil {
-		return http.InternalError(err)
+		return c.handleError(err)
 	}
 
 	return nil
@@ -100,5 +101,13 @@ func (c *cardService) cardToResponse(card *entities.Card) *schema.CardResponse {
 		EncryptedKey:  card.EncryptedKey,
 		CreatedAt:     card.CreatedAt,
 		UpdatedAt:     card.UpdatedAt,
+	}
+}
+
+func (c *cardService) handleError(err error) error {
+	if err == sql.ErrNoRows {
+		return http.NotFoundError("Card not found")
+	} else {
+		return http.InternalError(err)
 	}
 }

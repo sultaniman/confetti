@@ -18,7 +18,7 @@ func (h *Handler) GenerateCard(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	card, err := h.CardService.GenerateCard(cardOptions)
+	card, err := h.CardService.Generate(cardOptions)
 	if err != nil {
 		return err
 	}
