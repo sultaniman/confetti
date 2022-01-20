@@ -123,6 +123,22 @@ func EncryptionError(err error) *shared.ServiceError {
 	return &shared.ServiceError{
 		Response:   err,
 		StatusCode: fiber.StatusInternalServerError,
-		ErrorCode:  shared.ServerError,
+		ErrorCode:  shared.EncryptionError,
+	}
+}
+
+func DecryptionError(err error) *shared.ServiceError {
+	return &shared.ServiceError{
+		Response:   err,
+		StatusCode: fiber.StatusInternalServerError,
+		ErrorCode:  shared.DecryptionError,
+	}
+}
+
+func DecodingError(err error) *shared.ServiceError {
+	return &shared.ServiceError{
+		Response:   err,
+		StatusCode: fiber.StatusInternalServerError,
+		ErrorCode:  shared.DecodingError,
 	}
 }
