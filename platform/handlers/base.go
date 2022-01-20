@@ -38,7 +38,7 @@ func App(handler *Handler) *fiber.App {
 	cards.Get("/:card_id", handler.GetCard)
 	cards.Delete("/:card_id", handler.DeleteCard)
 	cards.Put("/:card_id", handler.UpdateCard)
-	cards.Get("/:card_id/decrypt", handler.CreateCard)
+	cards.Get("/:card_id/decrypt", handler.DecryptCard)
 	cards.Post("/new", handler.GenerateCard)
 
 	auth := app.Group("/auth")

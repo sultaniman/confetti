@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/imanhodjaev/confetti/platform/http"
 )
 
 // GenerateCard godoc
@@ -62,28 +61,17 @@ func (h *Handler) CreateCard(ctx *fiber.Ctx) error {
 // @Success 200 {object} schema.CardResponse
 // @Router / [get]
 func (h *Handler) GetCard(ctx *fiber.Ctx) error {
-	cardId, err := h.Params.GetUUIDParam(ctx, "card_id")
+	claim, err := h.Params.EnsureCardClaim(ctx)
 	if err != nil {
 		return err
 	}
 
-	userId, err := h.Params.GetUserIdFromLocals(ctx)
+	card, err := h.CardService.Get(claim.CardId)
 	if err != nil {
 		return err
 	}
 
-	card, err := h.CardService.Get(*cardId)
-	if err != nil {
-		return err
-	}
-
-	if card.UserId.String() != userId.String() {
-		return http.NotFoundError("Card not found")
-	}
-
-	return ctx.
-		Status(fiber.StatusCreated).
-		JSON(card)
+	return ctx.JSON(card)
 }
 
 // UpdateCard godoc
@@ -94,31 +82,17 @@ func (h *Handler) GetCard(ctx *fiber.Ctx) error {
 // @Success 204 {string} nil update succeeded
 // @Router / [put]
 func (h *Handler) UpdateCard(ctx *fiber.Ctx) error {
+	claim, err := h.Params.EnsureCardClaim(ctx)
+	if err != nil {
+		return err
+	}
+
 	updateCardRequest, err := h.Params.UpdateCardPayload(ctx)
 	if err != nil {
 		return err
 	}
 
-	userId, err := h.Params.GetUserIdFromLocals(ctx)
-	if err != nil {
-		return err
-	}
-
-	cardId, err := h.Params.GetUUIDParam(ctx, "card_id")
-	if err != nil {
-		return err
-	}
-
-	card, err := h.CardService.Get(*cardId)
-	if err != nil {
-		return err
-	}
-
-	if card.UserId.String() != userId.String() {
-		return http.NotFoundError("Card not found")
-	}
-
-	err = h.CardService.Update(*cardId, updateCardRequest)
+	err = h.CardService.Update(claim.CardId, updateCardRequest)
 	if err != nil {
 		return err
 	}
@@ -134,29 +108,36 @@ func (h *Handler) UpdateCard(ctx *fiber.Ctx) error {
 // @Success 204 {string} nil deletion is successful
 // @Router / [delete]
 func (h *Handler) DeleteCard(ctx *fiber.Ctx) error {
-	cardId, err := h.Params.GetUUIDParam(ctx, "card_id")
+	claim, err := h.Params.EnsureCardClaim(ctx)
 	if err != nil {
 		return err
 	}
 
-	userId, err := h.Params.GetUserIdFromLocals(ctx)
-	if err != nil {
-		return err
-	}
-
-	card, err := h.CardService.Get(*cardId)
-	if err != nil {
-		return err
-	}
-
-	if card.UserId.String() != userId.String() {
-		return http.NotFoundError("Card not found")
-	}
-
-	err = h.CardService.Delete(*cardId)
+	err = h.CardService.Delete(claim.CardId)
 	if err != nil {
 		return err
 	}
 
 	return ctx.SendStatus(fiber.StatusNoContent)
+}
+
+// DecryptCard godoc
+// @Summary Decrypt card by id
+// @Description Decrypt card by id
+// @Tags cards
+// @Produce json
+// @Success 200 {object} schema.PlainCardResponse
+// @Router / [delete]
+func (h *Handler) DecryptCard(ctx *fiber.Ctx) error {
+	claim, err := h.Params.EnsureCardClaim(ctx)
+	if err != nil {
+		return err
+	}
+
+	plainCard, err := h.CardService.Decrypt(claim.CardId)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(plainCard)
 }
