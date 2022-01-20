@@ -277,15 +277,16 @@ func (s *userService) EmailExists(email string) bool {
 
 func (s *userService) userToResponse(user *entities.User) *schema.UserResponse {
 	return &schema.UserResponse{
-		ID:        user.ID,
-		FullName:  user.FullName,
-		Email:     user.Email,
-		IsAdmin:   user.IsAdmin,
-		IsActive:  user.IsActive,
-		Settings:  user.Settings,
-		Provider:  user.Provider,
-		Password:  user.Password,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		ID:          user.ID,
+		FullName:    user.FullName,
+		Email:       user.Email,
+		IsAdmin:     user.IsAdmin,
+		IsActive:    user.IsActive,
+		IsConfirmed: user.IsConfirmed,
+		Settings:    user.Settings,
+		Provider:    user.Provider,
+		Password:    user.Password,
+		CreatedAt:   user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
 	}
 }
