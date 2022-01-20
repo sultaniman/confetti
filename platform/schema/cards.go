@@ -34,3 +34,14 @@ type CardResponse struct {
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
+
+type CardClaim struct {
+	CardId uuid.UUID
+	UserId uuid.UUID
+	Exists bool
+}
+
+type PlainCardResponse struct {
+	Data string
+	Key  string
+}
