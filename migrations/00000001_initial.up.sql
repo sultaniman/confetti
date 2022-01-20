@@ -2,23 +2,39 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE users
 (
-    id         UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
-    full_name  VARCHAR(255)                NULL,
-    email      VARCHAR(100)                NOT NULL,
-    password   VARCHAR(2048)               NOT NULL,
-    is_admin   BOOL                        NOT NULL DEFAULT false,
-    is_active  BOOL                        NOT NULL DEFAULT false,
-    settings   JSONB                       NULL     DEFAULT '{}'::jsonb,
+    id           UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
+    full_name    VARCHAR(255)                NULL,
+    email        VARCHAR(100)                NOT NULL,
+    password     VARCHAR(2048)               NOT NULL,
+    is_admin     BOOL                        NOT NULL DEFAULT false,
+    is_active    BOOL                        NOT NULL DEFAULT false,
+    is_confirmed BOOL                        NOT NULL DEFAULT false,
+    settings     JSONB                       NULL     DEFAULT '{}'::jsonb,
 
     -- 'auth' is default, other authentication providers
     -- for example can be one of google, twitter etc.
-    provider   VARCHAR(56)                 NULL     DEFAULT 'auth',
-    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
-    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP)
+    provider     VARCHAR(56)                 NULL     DEFAULT 'auth',
+    created_at   TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+    updated_at   TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP)
 );
 
 CREATE UNIQUE INDEX ix_users_email ON users (lower(email));
 CREATE INDEX ix_users_full_name ON users (lower(full_name));
+
+CREATE TABLE user_confirmations
+(
+    id            UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
+    user_id       UUID                        NOT NULL,
+    code          VARCHAR(40)                 NOT NULL,
+    expires_after TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+
+    CONSTRAINT fk_user_confirmations_user
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
+
+CREATE INDEX ix_user_confirmations_code ON user_confirmations (code);
 
 CREATE TABLE cards
 (

@@ -7,13 +7,14 @@ import (
 )
 
 type NewUser struct {
-	FullName string
-	Email    string
-	Password string
-	IsAdmin  bool
-	IsActive bool
-	Provider string
-	Settings json.RawMessage
+	FullName    string
+	Email       string
+	Password    string
+	IsAdmin     bool
+	IsActive    bool
+	IsConfirmed bool
+	Provider    string
+	Settings    json.RawMessage
 }
 
 type UpdateUser struct {
@@ -23,14 +24,15 @@ type UpdateUser struct {
 }
 
 type User struct {
-	ID        uuid.UUID       `db:"id"`
-	FullName  string          `db:"full_name"`
-	Email     string          `db:"email"`
-	Password  string          `db:"password"`
-	IsAdmin   bool            `db:"is_admin"`
-	IsActive  bool            `db:"is_active"`
-	Settings  json.RawMessage `db:"settings"`
-	Provider  string          `db:"provider"`
-	CreatedAt time.Time       `db:"created_at"`
-	UpdatedAt time.Time       `db:"updated_at"`
+	ID          uuid.UUID       `db:"id"`
+	FullName    string          `db:"full_name"`
+	Email       string          `db:"email"`
+	Password    string          `db:"password"`
+	IsAdmin     bool            `db:"is_admin"`
+	IsActive    bool            `db:"is_active"`
+	IsConfirmed bool            `db:"is_confirmed"`
+	Settings    json.RawMessage `db:"settings"`
+	Provider    string          `db:"provider"`
+	CreatedAt   time.Time       `db:"created_at"`
+	UpdatedAt   time.Time       `db:"updated_at"`
 }

@@ -30,16 +30,17 @@ type UpdateUserPasswordRequest struct {
 }
 
 type UserResponse struct {
-	ID        uuid.UUID
-	FullName  string
-	Email     string
-	IsAdmin   bool
-	IsActive  bool
-	Provider  string
-	Settings  json.RawMessage `swaggertype:"object"`
-	Password  string          `json:"-"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          uuid.UUID
+	FullName    string
+	Email       string
+	IsAdmin     bool
+	IsActive    bool
+	IsConfirmed bool
+	Provider    string
+	Settings    json.RawMessage `swaggertype:"object"`
+	Password    string          `json:"-"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type UsersResponse struct {
