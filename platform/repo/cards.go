@@ -11,6 +11,7 @@ import (
 type CardRepo interface {
 	Get(id uuid.UUID) (*entities.Card, error)
 	Create(card *entities.NewCard) (*entities.Card, error)
+	Update(cardId uuid.UUID, newTitle string) (*entities.Card, error)
 	Delete(id uuid.UUID) error
 }
 
@@ -65,6 +66,21 @@ func (c *cardRepo) Create(card *entities.NewCard) (*entities.Card, error) {
 
 	cardRow := new(entities.Card)
 	return cardRow, c.Base.DB.Get(cardRow, query, args...)
+}
+
+func (c *cardRepo) Update(cardId uuid.UUID, newTitle string) (*entities.Card, error) {
+	query, args, err := c.Base.
+		Update("cards", true).
+		Where(sq.Eq{"id": cardId}).
+		Set("title", newTitle).
+		ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	card := new(entities.Card)
+	return card, c.Base.DB.Get(card, query, args...)
 }
 
 func (c *cardRepo) Delete(id uuid.UUID) error {

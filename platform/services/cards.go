@@ -19,6 +19,7 @@ type CardService interface {
 	Generate(options *schema.CardOptions) (*schema.NewCardResponse, error)
 	Get(cardId uuid.UUID) (*schema.CardResponse, error)
 	Create(userId uuid.UUID, newCard *schema.NewCardRequest) (*schema.CardResponse, error)
+	Update(cardId uuid.UUID, updateRequest *schema.UpdateCardRequest) error
 	Delete(cardId uuid.UUID) error
 }
 
@@ -82,6 +83,15 @@ func (c *cardService) Create(userId uuid.UUID, newCard *schema.NewCardRequest) (
 	}
 
 	return c.cardToResponse(card), nil
+}
+
+func (c *cardService) Update(cardId uuid.UUID, updateRequest *schema.UpdateCardRequest) error {
+	_, err := c.cardsRepo.Update(cardId, updateRequest.Title)
+	if err != nil {
+		return c.handleError(err)
+	}
+
+	return nil
 }
 
 func (c *cardService) Delete(cardId uuid.UUID) error {

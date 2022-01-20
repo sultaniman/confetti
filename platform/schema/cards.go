@@ -21,6 +21,10 @@ type NewCardRequest struct {
 	Key   string
 }
 
+type UpdateCardRequest struct {
+	Title string
+}
+
 type CardResponse struct {
 	ID            uuid.UUID
 	UserId        uuid.UUID

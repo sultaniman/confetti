@@ -159,6 +159,19 @@ func (p *ParamHandler) CreateCardPayload(c *fiber.Ctx) (*schema.NewCardRequest, 
 	return newCard, nil
 }
 
+func (p *ParamHandler) UpdateCardPayload(c *fiber.Ctx) (*schema.UpdateCardRequest, error) {
+	updatePayload := new(schema.UpdateCardRequest)
+	if err := c.BodyParser(updatePayload); err != nil {
+		return nil, &shared.ServiceError{
+			Response:   err,
+			StatusCode: fiber.StatusInternalServerError,
+			ErrorCode:  shared.ServerError,
+		}
+	}
+
+	return updatePayload, nil
+}
+
 // Generic handlers
 
 func (p *ParamHandler) GetUUIDParam(c *fiber.Ctx, paramName string) (*uuid.UUID, error) {

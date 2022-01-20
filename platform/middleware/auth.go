@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/imanhodjaev/confetti/platform/http"
 	"github.com/imanhodjaev/confetti/platform/shared"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
@@ -10,10 +11,14 @@ import (
 
 const authScheme = "Bearer"
 
-func AuthMiddleware(authHeader string, jwks *jwk.Set) fiber.Handler {
+func AuthMiddleware(authHeader string, authRequired bool, jwks *jwk.Set) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		auth := ctx.Get(authHeader)
 		if len(auth) <= len(authScheme) || auth[:len(authScheme)] != authScheme {
+			if authRequired {
+				return http.ForbiddenError("Please authenticate")
+			}
+
 			return ctx.Next()
 		}
 

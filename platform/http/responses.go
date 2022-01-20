@@ -23,6 +23,15 @@ func UnauthorizedError(message string) *shared.ServiceError {
 	}
 }
 
+func ForbiddenError(message string) *shared.ServiceError {
+	return &shared.ServiceError{
+		Response:             message,
+		StatusCode:           fiber.StatusForbidden,
+		ErrorCode:            shared.Forbidden,
+		UseResponseAsMessage: shared.Bool(true),
+	}
+}
+
 func InternalError(err error) *shared.ServiceError {
 	return &shared.ServiceError{
 		Response:   err,
