@@ -85,3 +85,25 @@ func (h *Handler) Register(ctx *fiber.Ctx) error {
 
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
+
+// Confirm godoc
+// @Summary Confirmation for user accounts
+// @Description Confirmation for user accounts
+// @Tags auth
+// @Produce json
+// @Success 204 {string} nil registration is successful
+// @Router /confirm/{code} [get]
+func (h *Handler) Confirm(ctx *fiber.Ctx) error {
+	return ctx.SendStatus(fiber.StatusNoContent)
+}
+
+// ResendConfirmation godoc
+// @Summary Confirmation for user accounts
+// @Description Confirmation for user accounts
+// @Tags auth
+// @Produce json
+// @Success 204 {string} nil confirmation code resent
+// @Router /confirm/resend [post]
+func (h *Handler) ResendConfirmation(ctx *fiber.Ctx) error {
+	return ctx.SendStatus(fiber.StatusNoContent)
+}
