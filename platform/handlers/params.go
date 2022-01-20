@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"github.com/imanhodjaev/confetti/platform/http"
 	"github.com/imanhodjaev/confetti/platform/schema"
 	"github.com/imanhodjaev/confetti/platform/services"
 	"github.com/imanhodjaev/confetti/platform/shared"
@@ -10,6 +11,7 @@ import (
 
 type ParamHandler struct {
 	UserService services.UserService
+	CardService services.CardService
 }
 
 // User params
@@ -170,6 +172,27 @@ func (p *ParamHandler) UpdateCardPayload(c *fiber.Ctx) (*schema.UpdateCardReques
 	}
 
 	return updatePayload, nil
+}
+
+func (p *ParamHandler) EnsureCardClaim(c *fiber.Ctx) (*schema.CardClaim, error) {
+	cardId, err := p.GetUUIDParam(c, "card_id")
+	if err != nil {
+		return nil, err
+	}
+
+	userId, err := p.GetUserIdFromLocals(c)
+	if err != nil {
+		return nil, err
+	}
+
+	if !p.CardService.ClaimExists(*cardId, *userId) {
+		return nil, http.NotFoundError("Card not found")
+	}
+
+	return &schema.CardClaim{
+		CardId: *cardId,
+		UserId: *userId,
+	}, nil
 }
 
 // Generic handlers

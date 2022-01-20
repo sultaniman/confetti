@@ -13,6 +13,7 @@ type CardRepo interface {
 	Create(card *entities.NewCard) (*entities.Card, error)
 	Update(cardId uuid.UUID, newTitle string) (*entities.Card, error)
 	Delete(id uuid.UUID) error
+	ClaimExists(cardId uuid.UUID, userId uuid.UUID) bool
 }
 
 type cardRepo struct {
@@ -94,4 +95,22 @@ func (c *cardRepo) Delete(id uuid.UUID) error {
 
 	card := new(entities.Card)
 	return c.Base.DB.Get(card, query, args...)
+}
+
+func (c *cardRepo) ClaimExists(cardId uuid.UUID, userId uuid.UUID) bool {
+	query, args, err := c.Base.
+		Count("cards", sq.Eq{"id": cardId, "user_id": userId}).
+		ToSql()
+
+	if err != nil {
+		return false
+	}
+
+	rowCount := 0
+	err = c.Base.DB.Get(&rowCount, query, args...)
+	if err != nil {
+		return false
+	}
+
+	return rowCount > 0
 }
