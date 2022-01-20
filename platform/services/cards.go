@@ -21,6 +21,8 @@ type CardService interface {
 	Create(userId uuid.UUID, newCard *schema.NewCardRequest) (*schema.CardResponse, error)
 	Update(cardId uuid.UUID, updateRequest *schema.UpdateCardRequest) error
 	Delete(cardId uuid.UUID) error
+	Decrypt(cardId uuid.UUID) (*schema.PlainCardResponse, error)
+	ClaimExists(cardId uuid.UUID, userId uuid.UUID) bool
 }
 
 type cardService struct {
@@ -101,6 +103,45 @@ func (c *cardService) Delete(cardId uuid.UUID) error {
 	}
 
 	return nil
+}
+
+func (c *cardService) Decrypt(cardId uuid.UUID) (*schema.PlainCardResponse, error) {
+	card, err := c.cardsRepo.Get(cardId)
+	if err != nil {
+		return nil, c.handleError(err)
+	}
+
+	hash := sha512.New()
+
+	decodedKey, err := base64.StdEncoding.DecodeString(card.EncryptedKey)
+	if err != nil {
+		return nil, http.DecodingError(err)
+	}
+
+	passphrase, err := rsa.DecryptOAEP(hash, rand.Reader, c.privateKey, decodedKey, nil)
+	if err != nil {
+		return nil, http.DecryptionError(err)
+	}
+
+	decodedData, err := base64.StdEncoding.DecodeString(card.EncryptedData)
+	if err != nil {
+		return nil, http.DecodingError(err)
+	}
+
+	message := crypto.NewMessage("", string(decodedData))
+	data, err := message.Decrypt(string(passphrase))
+	if err != nil {
+		return nil, http.DecryptionError(err)
+	}
+
+	return &schema.PlainCardResponse{
+		Data: data,
+		Key:  string(passphrase),
+	}, nil
+}
+
+func (c *cardService) ClaimExists(cardId uuid.UUID, userId uuid.UUID) bool {
+	return c.cardsRepo.ClaimExists(cardId, userId)
 }
 
 func (c *cardService) cardToResponse(card *entities.Card) *schema.CardResponse {
