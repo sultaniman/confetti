@@ -1,8 +1,39 @@
 definitions:
+  schema.CardResponse:
+    properties:
+      createdAt:
+        type: string
+      encryptedData:
+        type: string
+      encryptedKey:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+      userId:
+        type: string
+    type: object
   schema.HealthResponse:
     properties:
       ok:
         type: boolean
+    type: object
+  schema.NewCardResponse:
+    properties:
+      data:
+        type: string
+      key:
+        type: string
+    type: object
+  schema.PlainCardResponse:
+    properties:
+      data:
+        type: string
+      key:
+        type: string
     type: object
   schema.TokenResponse:
     properties:
@@ -48,6 +79,55 @@ definitions:
 info:
   contact: {}
 paths:
+  /:
+    delete:
+      description: Delete card by id
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Delete card by id
+      tags:
+      - cards
+    get:
+      description: Decrypt card by id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PlainCardResponse'
+      summary: Decrypt card by id
+      tags:
+      - cards
+    post:
+      description: Create card
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schema.CardResponse'
+      summary: Create card
+      tags:
+      - cards
+    put:
+      description: Update card
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Update card
+      tags:
+      - cards
   /auth/jwks:
     get:
       description: Returns jwks details
@@ -102,6 +182,19 @@ paths:
       summary: Register using email and password
       tags:
       - auth
+  /new:
+    post:
+      description: Generate card preview
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.NewCardResponse'
+      summary: Generate card preview
+      tags:
+      - cards
   /system/health:
     get:
       description: Get system health status
