@@ -47,3 +47,17 @@ type UsersResponse struct {
 	Count int
 	Users []*UserResponse
 }
+
+type UserConfirmation struct {
+	ID        uuid.UUID
+	UserId    uuid.UUID
+	Code      string
+	CreatedAt time.Time
+}
+
+type PasswordReset struct {
+	ID        uuid.UUID
+	UserId    uuid.UUID
+	Code      string
+	CreatedAt time.Time
+}

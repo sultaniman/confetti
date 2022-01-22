@@ -10,6 +10,10 @@ type RegisterRequest struct {
 	Password string
 }
 
+type ResetPasswordRequest struct {
+	Email string
+}
+
 type TokenResponse struct {
 	AccessToken  string
 	TokenType    string

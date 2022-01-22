@@ -36,3 +36,17 @@ type User struct {
 	CreatedAt   time.Time       `db:"created_at"`
 	UpdatedAt   time.Time       `db:"updated_at"`
 }
+
+type UserConfirmation struct {
+	ID        uuid.UUID `db:"id"`
+	UserId    uuid.UUID `db:"user_id"`
+	Code      string    `db:"code"`
+	CreatedAt time.Time `db:"created_at"`
+}
+
+type PasswordReset struct {
+	ID        uuid.UUID `db:"id"`
+	UserId    uuid.UUID `db:"user_id"`
+	Code      string    `db:"code"`
+	CreatedAt time.Time `db:"created_at"`
+}
