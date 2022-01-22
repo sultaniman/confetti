@@ -19,6 +19,7 @@ type UserService interface {
 	Update(userId uuid.UUID, user *schema.UpdateUserRequest) (*schema.UserResponse, error)
 	UpdateEmail(userId uuid.UUID, user *schema.UpdateUserEmailRequest) (*schema.UserResponse, error)
 	UpdatePassword(userId uuid.UUID, emailUpdate *schema.UpdateUserPasswordRequest) (*schema.UserResponse, error)
+	ResetPasswordRequest(email string) (*schema.PasswordReset, error)
 	Delete(id uuid.UUID) (*schema.UserResponse, error)
 	Exists(userId uuid.UUID) bool
 	EmailExists(email string) bool
@@ -92,12 +93,13 @@ func (s *userService) Create(newUserRequest *schema.NewUserRequest) (*schema.Use
 	}
 
 	user, err := s.usersRepo.Create(&entities.NewUser{
-		FullName: newUserRequest.FullName,
-		Email:    newUserRequest.Email,
-		Password: password,
-		IsActive: true,
-		Settings: newUserRequest.Settings,
-		Provider: newUserRequest.Provider,
+		FullName:    newUserRequest.FullName,
+		Email:       newUserRequest.Email,
+		Password:    password,
+		IsActive:    true,
+		IsConfirmed: false,
+		Settings:    newUserRequest.Settings,
+		Provider:    newUserRequest.Provider,
 	})
 
 	if err != nil {
@@ -265,6 +267,29 @@ func (s *userService) Delete(userId uuid.UUID) (*schema.UserResponse, error) {
 
 	response := s.userToResponse(user)
 	return response, nil
+}
+
+func (s *userService) ResetPasswordRequest(email string) (*schema.PasswordReset, error) {
+	if !s.usersRepo.EmailExists(email) {
+		return nil, http.NotFoundError("User not found")
+	}
+
+	passwordReset, err := s.usersRepo.CreateResetPassword(email)
+	if err != nil {
+		log.Error().
+			Err(err).
+			Str("email", email).
+			Msg("Unable to reset password user")
+
+		return nil, http.InternalError(err)
+	}
+
+	return &schema.PasswordReset{
+		ID:        passwordReset.ID,
+		UserId:    passwordReset.UserId,
+		Code:      passwordReset.Code,
+		CreatedAt: passwordReset.CreatedAt,
+	}, nil
 }
 
 func (s *userService) Exists(userId uuid.UUID) bool {

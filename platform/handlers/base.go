@@ -44,6 +44,7 @@ func App(handler *Handler) *fiber.App {
 	auth := app.Group("/auth")
 	auth.Get("/jwks", handler.JWKS)
 	auth.Post("/register", handler.Register)
+	auth.Post("/reset-password", handler.ResetPasswordRequest)
 	auth.Post("/token", handler.AuthTokenFlow)
 	auth.Post("/token/refresh", handler.RefreshToken)
 	auth.Delete("/token", handler.LogOut)

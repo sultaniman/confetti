@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/rsa"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/imanhodjaev/confetti/platform/mailer"
 	"github.com/imanhodjaev/confetti/platform/repo"
 	"github.com/imanhodjaev/confetti/platform/services"
 	"github.com/jmoiron/sqlx"
@@ -29,6 +30,7 @@ func NewHandler(db *sqlx.DB, key *rsa.PrivateKey) (*Handler, error) {
 		Q:  &psql,
 	}
 
+	mailerHandler := mailer.GetMailer()
 	userRepo := repo.NewUserRepo(baseRepo)
 	cardRepo := repo.NewCardRepo(baseRepo)
 	userService := services.NewUserService(userRepo)
@@ -43,7 +45,7 @@ func NewHandler(db *sqlx.DB, key *rsa.PrivateKey) (*Handler, error) {
 		UserRepo:    userRepo,
 		UserService: userService,
 		CardService: cardService,
-		AuthService: services.NewAuthService(userService, jwxService),
+		AuthService: services.NewAuthService(userService, jwxService, mailerHandler),
 		JWXService:  jwxService,
 		Params: &ParamHandler{
 			UserService: userService,

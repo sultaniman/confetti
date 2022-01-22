@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/imanhodjaev/confetti/platform/http"
+	"github.com/imanhodjaev/confetti/platform/mailer"
 	"github.com/imanhodjaev/confetti/platform/schema"
 	"github.com/imanhodjaev/confetti/util"
 	"github.com/lestrrat-go/jwx/jwt"
@@ -17,18 +18,21 @@ type AuthService interface {
 	AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (*schema.TokenResponse, error)
 	RefreshAuthToken(ctx *fiber.Ctx) (*schema.TokenResponse, error)
 	Register(registerPayload *schema.RegisterRequest) error
+	ResetPasswordRequest(resetPasswordPayload *schema.ResetPasswordRequest) error
 	Logout(ctx *fiber.Ctx) error
 }
 
 type authService struct {
 	usersService UserService
 	jwxService   *JWXService
+	mailHandler  mailer.Mailer
 }
 
-func NewAuthService(usersService UserService, jwxService *JWXService) AuthService {
+func NewAuthService(usersService UserService, jwxService *JWXService, mailHandler mailer.Mailer) AuthService {
 	return &authService{
 		usersService: usersService,
 		jwxService:   jwxService,
+		mailHandler:  mailHandler,
 	}
 }
 
@@ -147,6 +151,36 @@ func (a *authService) Register(registerPayload *schema.RegisterRequest) error {
 	})
 
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *authService) ResetPasswordRequest(resetPasswordPayload *schema.ResetPasswordRequest) error {
+	passwordReset, err := a.usersService.ResetPasswordRequest(resetPasswordPayload.Email)
+	if err != nil {
+		log.Info().
+			Str("email", resetPasswordPayload.Email).
+			Msg("Password reset attempt using unknown email")
+
+		return err
+	}
+
+	link := "https://" + viper.GetString("app_host") + "/reset-password/" + passwordReset.Code
+	err = a.mailHandler.Send(&mailer.EmailMessage{
+		Subject:   "Your password reset link",
+		ToEmail:   resetPasswordPayload.Email,
+		FromEmail: viper.GetString("from_email"),
+		TextBody:  fmt.Sprintf("Please use the following link to reset your password: %s", link),
+		HTMLBody:  fmt.Sprintf("Please use the following link to reset your password: %s", link),
+	})
+
+	if err != nil {
+		log.Info().
+			Str("email", resetPasswordPayload.Email).
+			Msg("Unable to send password resend email")
+
 		return err
 	}
 

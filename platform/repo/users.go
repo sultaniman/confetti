@@ -18,6 +18,7 @@ type UserRepo interface {
 	EmailExists(email string) bool
 	UpdateEmail(userId uuid.UUID, newEmail string) (*entities.User, error)
 	UpdatePassword(userId uuid.UUID, newPassword string) (*entities.User, error)
+	CreateResetPassword(email string) (*entities.PasswordReset, error)
 }
 
 type userRepo struct {
@@ -181,6 +182,34 @@ func (r *userRepo) UpdatePassword(userId uuid.UUID, newPassword string) (*entiti
 
 	userRow := new(entities.User)
 	return userRow, r.Base.DB.Get(userRow, query, args...)
+}
+
+func (r *userRepo) CreateResetPassword(email string) (*entities.PasswordReset, error) {
+	user, err := r.GetByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	query, args, err := r.Base.
+		Insert(
+			"password_resets",
+			"user_id",
+			"code",
+			"created_at",
+		).
+		Values(
+			user.ID,
+			uuid.New().String(),
+			time.Now().UTC(),
+		).
+		ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	passwordReset := new(entities.PasswordReset)
+	return passwordReset, r.Base.DB.Get(passwordReset, query, args...)
 }
 
 func (r *userRepo) Delete(id uuid.UUID) (*entities.User, error) {
