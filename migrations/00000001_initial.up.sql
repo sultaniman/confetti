@@ -23,10 +23,10 @@ CREATE INDEX ix_users_full_name ON users (lower(full_name));
 
 CREATE TABLE user_confirmations
 (
-    id            UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
-    user_id       UUID                        NOT NULL,
-    code          VARCHAR(40)                 NOT NULL,
-    expires_after TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+    id         UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
+    user_id    UUID                        NOT NULL,
+    code       VARCHAR(40)                 NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
 
     CONSTRAINT fk_user_confirmations_user
         FOREIGN KEY (user_id)
@@ -35,6 +35,21 @@ CREATE TABLE user_confirmations
 );
 
 CREATE INDEX ix_user_confirmations_code ON user_confirmations (code);
+
+CREATE TABLE password_resets
+(
+    id         UUID PRIMARY KEY                     DEFAULT uuid_generate_v4(),
+    user_id    UUID                        NOT NULL,
+    code       VARCHAR(40)                 NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
+
+    CONSTRAINT fk_password_resets_user
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
+
+CREATE INDEX ix_password_resets_code ON password_resets (code);
 
 CREATE TABLE cards
 (
