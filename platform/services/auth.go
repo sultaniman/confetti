@@ -150,6 +150,12 @@ func (a *authService) Register(registerPayload *schema.RegisterRequest) error {
 		Settings: []byte("{}"),
 	})
 
+	confirmation, err := a.usersService.CreateConfirmation(registerPayload.Email)
+	if err != nil {
+		return err
+	}
+
+	err = a.mailHandler.SendConfirmationCode(registerPayload.Email, confirmation.Code)
 	if err != nil {
 		return err
 	}
@@ -167,14 +173,10 @@ func (a *authService) ResetPasswordRequest(resetPasswordPayload *schema.ResetPas
 		return err
 	}
 
-	link := "https://" + viper.GetString("app_host") + "/reset-password/" + passwordReset.Code
-	err = a.mailHandler.Send(&mailer.EmailMessage{
-		Subject:   "Your password reset link",
-		ToEmail:   resetPasswordPayload.Email,
-		FromEmail: viper.GetString("from_email"),
-		TextBody:  fmt.Sprintf("Please use the following link to reset your password: %s", link),
-		HTMLBody:  fmt.Sprintf("Please use the following link to reset your password: %s", link),
-	})
+	err = a.mailHandler.SendPasswordResetCode(resetPasswordPayload.Email, passwordReset.Code)
+	if err != nil {
+		return err
+	}
 
 	if err != nil {
 		log.Info().

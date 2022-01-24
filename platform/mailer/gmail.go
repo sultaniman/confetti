@@ -7,6 +7,16 @@ import (
 
 type sendgridMailer struct{}
 
+func (s *sendgridMailer) SendConfirmationCode(toEmail string, code string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s *sendgridMailer) SendPasswordResetCode(toEmail, code string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewSendgridMailer() Mailer {
 	return &sendgridMailer{}
 }

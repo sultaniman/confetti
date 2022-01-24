@@ -37,16 +37,20 @@ type User struct {
 	UpdatedAt   time.Time       `db:"updated_at"`
 }
 
-type UserConfirmation struct {
+type ActionCode struct {
 	ID        uuid.UUID `db:"id"`
 	UserId    uuid.UUID `db:"user_id"`
 	Code      string    `db:"code"`
 	CreatedAt time.Time `db:"created_at"`
 }
 
-type PasswordReset struct {
-	ID        uuid.UUID `db:"id"`
-	UserId    uuid.UUID `db:"user_id"`
-	Code      string    `db:"code"`
-	CreatedAt time.Time `db:"created_at"`
+type ActionCodeRequest struct {
+	Type  string
+	Email string
+}
+
+type ActionCodeCheck struct {
+	Type string
+	Code string
+	TTL  time.Duration
 }

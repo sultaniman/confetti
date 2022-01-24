@@ -44,12 +44,13 @@ func App(handler *Handler) *fiber.App {
 	auth := app.Group("/auth")
 	auth.Get("/jwks", handler.JWKS)
 	auth.Post("/register", handler.Register)
-	auth.Post("/reset-password", handler.ResetPasswordRequest)
 	auth.Post("/token", handler.AuthTokenFlow)
 	auth.Post("/token/refresh", handler.RefreshToken)
 	auth.Delete("/token", handler.LogOut)
 	auth.Get("/confirm/:code", handler.Confirm)
 	auth.Post("/confirm/resend", handler.ResendConfirmation)
+	auth.Post("/reset-password", handler.ResetPasswordRequest)
+	auth.Post("/reset-password/:code", handler.ResetPasswordRequest)
 
 	return app
 }

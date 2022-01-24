@@ -19,7 +19,8 @@ type UserService interface {
 	Update(userId uuid.UUID, user *schema.UpdateUserRequest) (*schema.UserResponse, error)
 	UpdateEmail(userId uuid.UUID, user *schema.UpdateUserEmailRequest) (*schema.UserResponse, error)
 	UpdatePassword(userId uuid.UUID, emailUpdate *schema.UpdateUserPasswordRequest) (*schema.UserResponse, error)
-	ResetPasswordRequest(email string) (*schema.PasswordReset, error)
+	ResetPasswordRequest(email string) (*schema.ActionCode, error)
+	CreateConfirmation(email string) (*schema.ActionCode, error)
 	Delete(id uuid.UUID) (*schema.UserResponse, error)
 	Exists(userId uuid.UUID) bool
 	EmailExists(email string) bool
@@ -269,12 +270,16 @@ func (s *userService) Delete(userId uuid.UUID) (*schema.UserResponse, error) {
 	return response, nil
 }
 
-func (s *userService) ResetPasswordRequest(email string) (*schema.PasswordReset, error) {
+func (s *userService) ResetPasswordRequest(email string) (*schema.ActionCode, error) {
 	if !s.usersRepo.EmailExists(email) {
 		return nil, http.NotFoundError("User not found")
 	}
 
-	passwordReset, err := s.usersRepo.CreateResetPassword(email)
+	passwordReset, err := s.usersRepo.CreateActionCode(&entities.ActionCodeRequest{
+		Type:  "password_resets",
+		Email: email,
+	})
+
 	if err != nil {
 		log.Error().
 			Err(err).
@@ -284,11 +289,38 @@ func (s *userService) ResetPasswordRequest(email string) (*schema.PasswordReset,
 		return nil, http.InternalError(err)
 	}
 
-	return &schema.PasswordReset{
+	return &schema.ActionCode{
 		ID:        passwordReset.ID,
 		UserId:    passwordReset.UserId,
 		Code:      passwordReset.Code,
 		CreatedAt: passwordReset.CreatedAt,
+	}, nil
+}
+
+func (s *userService) CreateConfirmation(email string) (*schema.ActionCode, error) {
+	if !s.usersRepo.EmailExists(email) {
+		return nil, http.NotFoundError("User not found")
+	}
+
+	actionCode, err := s.usersRepo.CreateActionCode(&entities.ActionCodeRequest{
+		Type:  "user_confirmations",
+		Email: email,
+	})
+
+	if err != nil {
+		log.Error().
+			Err(err).
+			Str("email", email).
+			Msg("Unable to create user confirmation")
+
+		return nil, http.InternalError(err)
+	}
+
+	return &schema.ActionCode{
+		ID:        actionCode.ID,
+		UserId:    actionCode.UserId,
+		Code:      actionCode.Code,
+		CreatedAt: actionCode.CreatedAt,
 	}, nil
 }
 

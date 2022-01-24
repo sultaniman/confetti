@@ -14,6 +14,8 @@ type EmailMessage struct {
 
 type Mailer interface {
 	Send(message *EmailMessage) error
+	SendConfirmationCode(toEmail string, code string) error
+	SendPasswordResetCode(toEmail, code string) error
 }
 
 func GetMailer() Mailer {

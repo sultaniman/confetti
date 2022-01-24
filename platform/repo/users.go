@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"errors"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 	"github.com/imanhodjaev/confetti/platform/entities"
@@ -18,7 +19,8 @@ type UserRepo interface {
 	EmailExists(email string) bool
 	UpdateEmail(userId uuid.UUID, newEmail string) (*entities.User, error)
 	UpdatePassword(userId uuid.UUID, newPassword string) (*entities.User, error)
-	CreateResetPassword(email string) (*entities.PasswordReset, error)
+	CreateActionCode(actionCodeRequest *entities.ActionCodeRequest) (*entities.ActionCode, error)
+	CheckActionCode(actionCodeCheck *entities.ActionCodeCheck) error
 }
 
 type userRepo struct {
@@ -184,15 +186,15 @@ func (r *userRepo) UpdatePassword(userId uuid.UUID, newPassword string) (*entiti
 	return userRow, r.Base.DB.Get(userRow, query, args...)
 }
 
-func (r *userRepo) CreateResetPassword(email string) (*entities.PasswordReset, error) {
-	user, err := r.GetByEmail(email)
+func (r *userRepo) CreateActionCode(actionCodeRequest *entities.ActionCodeRequest) (*entities.ActionCode, error) {
+	user, err := r.GetByEmail(actionCodeRequest.Email)
 	if err != nil {
 		return nil, err
 	}
 
 	query, args, err := r.Base.
 		Insert(
-			"password_resets",
+			actionCodeRequest.Type,
 			"user_id",
 			"code",
 			"created_at",
@@ -208,8 +210,31 @@ func (r *userRepo) CreateResetPassword(email string) (*entities.PasswordReset, e
 		return nil, err
 	}
 
-	passwordReset := new(entities.PasswordReset)
-	return passwordReset, r.Base.DB.Get(passwordReset, query, args...)
+	actionCode := new(entities.ActionCode)
+	return actionCode, r.Base.DB.Get(actionCode, query, args...)
+}
+
+func (r *userRepo) CheckActionCode(actionCodeCheck *entities.ActionCodeCheck) error {
+	query, args, err := r.Base.
+		Select(actionCodeCheck.Type).
+		Where(sq.Eq{"code": actionCodeCheck.Code}).
+		ToSql()
+
+	if err != nil {
+		return err
+	}
+
+	actionCode := new(entities.ActionCode)
+	err = r.Base.DB.Get(actionCode, query, args...)
+	if err != nil {
+		return err
+	}
+
+	if actionCode.CreatedAt.Add(actionCodeCheck.TTL).Before(time.Now().UTC()) {
+		return errors.New("code has expired")
+	}
+
+	return nil
 }
 
 func (r *userRepo) Delete(id uuid.UUID) (*entities.User, error) {

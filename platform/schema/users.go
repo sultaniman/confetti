@@ -48,16 +48,14 @@ type UsersResponse struct {
 	Users []*UserResponse
 }
 
-type UserConfirmation struct {
-	ID        uuid.UUID
-	UserId    uuid.UUID
-	Code      string
-	CreatedAt time.Time
+type ActionCodeRequest struct {
+	Type  string
+	Email string
 }
 
-type PasswordReset struct {
+type ActionCode struct {
 	ID        uuid.UUID
 	UserId    uuid.UUID
 	Code      string
-	CreatedAt time.Time
+	CreatedAt time.Time `json:"-"`
 }
