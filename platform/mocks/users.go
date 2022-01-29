@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	uuid "github.com/google/uuid"
-	entities "github.com/imanhodjaev/confetti/platform/entities"
+	entities "github.com/sultaniman/confetti/platform/entities"
 )
 
 // MockUserRepo is a mock of UserRepo interface.

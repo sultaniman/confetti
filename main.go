@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/imanhodjaev/confetti/cmd"
+	"github.com/sultaniman/confetti/cmd"
 	"os"
 )
 

@@ -3,13 +3,13 @@ package services
 import (
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/imanhodjaev/confetti/platform/entities"
-	"github.com/imanhodjaev/confetti/platform/http"
-	"github.com/imanhodjaev/confetti/platform/repo"
-	"github.com/imanhodjaev/confetti/platform/schema"
-	"github.com/imanhodjaev/confetti/util"
 	"github.com/omeid/pgerror"
 	"github.com/rs/zerolog/log"
+	"github.com/sultaniman/confetti/platform/entities"
+	"github.com/sultaniman/confetti/platform/http"
+	"github.com/sultaniman/confetti/platform/repo"
+	"github.com/sultaniman/confetti/platform/schema"
+	"github.com/sultaniman/confetti/util"
 )
 
 type UserService interface {

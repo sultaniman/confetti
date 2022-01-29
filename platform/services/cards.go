@@ -7,12 +7,12 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"github.com/google/uuid"
-	"github.com/imanhodjaev/confetti/platform/entities"
-	"github.com/imanhodjaev/confetti/platform/http"
-	"github.com/imanhodjaev/confetti/platform/repo"
-	"github.com/imanhodjaev/confetti/platform/schema"
 	"github.com/imanhodjaev/pwc/crypto"
 	"github.com/imanhodjaev/pwc/gen"
+	"github.com/sultaniman/confetti/platform/entities"
+	"github.com/sultaniman/confetti/platform/http"
+	"github.com/sultaniman/confetti/platform/repo"
+	"github.com/sultaniman/confetti/platform/schema"
 )
 
 type CardService interface {

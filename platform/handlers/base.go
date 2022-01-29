@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/imanhodjaev/confetti/platform/middleware"
-	"github.com/imanhodjaev/confetti/platform/shared"
+	"github.com/sultaniman/confetti/platform/middleware"
+	"github.com/sultaniman/confetti/platform/shared"
 )
 
 func App(handler *Handler) *fiber.App {

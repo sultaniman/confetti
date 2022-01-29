@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/imanhodjaev/confetti/util"
 	"github.com/spf13/cobra"
+	"github.com/sultaniman/confetti/util"
 )
 
 var testCmd = &cobra.Command{

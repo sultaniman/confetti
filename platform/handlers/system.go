@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/imanhodjaev/confetti/platform/schema"
+	"github.com/sultaniman/confetti/platform/schema"
 )
 
 // Health get system health status

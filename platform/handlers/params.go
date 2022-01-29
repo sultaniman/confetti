@@ -3,10 +3,10 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/imanhodjaev/confetti/platform/http"
-	"github.com/imanhodjaev/confetti/platform/schema"
-	"github.com/imanhodjaev/confetti/platform/services"
-	"github.com/imanhodjaev/confetti/platform/shared"
+	"github.com/sultaniman/confetti/platform/http"
+	"github.com/sultaniman/confetti/platform/schema"
+	"github.com/sultaniman/confetti/platform/services"
+	"github.com/sultaniman/confetti/platform/shared"
 )
 
 type ParamHandler struct {

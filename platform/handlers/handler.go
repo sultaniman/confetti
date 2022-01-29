@@ -3,10 +3,10 @@ package handlers
 import (
 	"crypto/rsa"
 	sq "github.com/Masterminds/squirrel"
-	"github.com/imanhodjaev/confetti/platform/mailer"
-	"github.com/imanhodjaev/confetti/platform/repo"
-	"github.com/imanhodjaev/confetti/platform/services"
 	"github.com/jmoiron/sqlx"
+	"github.com/sultaniman/confetti/platform/mailer"
+	"github.com/sultaniman/confetti/platform/repo"
+	"github.com/sultaniman/confetti/platform/services"
 )
 
 type Handler struct {

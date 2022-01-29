@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/imanhodjaev/confetti/platform/http"
-	"github.com/imanhodjaev/confetti/platform/shared"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
+	"github.com/sultaniman/confetti/platform/http"
+	"github.com/sultaniman/confetti/platform/shared"
 	"time"
 )
 

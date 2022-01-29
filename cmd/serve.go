@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/imanhodjaev/confetti/platform/db"
-	"github.com/imanhodjaev/confetti/platform/handlers"
-	"github.com/imanhodjaev/confetti/platform/keys"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/sultaniman/confetti/platform/db"
+	"github.com/sultaniman/confetti/platform/handlers"
+	"github.com/sultaniman/confetti/platform/keys"
 	"time"
 )
 
