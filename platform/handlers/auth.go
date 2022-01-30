@@ -112,7 +112,7 @@ func (h *Handler) ResetPasswordRequest(ctx *fiber.Ctx) error {
 // @Router /confirm/{code} [get]
 func (h *Handler) Confirm(ctx *fiber.Ctx) error {
 	code := ctx.Params("code")
-	err := h.AuthService.ConfirmUser(code)
+	err := h.UserService.ConfirmUser(code)
 	if err != nil {
 		return err
 	}

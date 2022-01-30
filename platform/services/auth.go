@@ -18,7 +18,6 @@ type AuthService interface {
 	AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (*schema.TokenResponse, error)
 	RefreshAuthToken(ctx *fiber.Ctx) (*schema.TokenResponse, error)
 	Register(registerPayload *schema.RegisterRequest) error
-	ConfirmUser(code string) error
 	ResetPasswordRequest(resetPasswordPayload *schema.ResetPasswordRequest) error
 	Logout(ctx *fiber.Ctx) error
 }
@@ -162,10 +161,6 @@ func (a *authService) Register(registerPayload *schema.RegisterRequest) error {
 	}
 
 	return nil
-}
-
-func (a *authService) ConfirmUser(code string) error {
-	return a.usersService.ConfirmUser(code)
 }
 
 func (a *authService) ResetPasswordRequest(resetPasswordPayload *schema.ResetPasswordRequest) error {
