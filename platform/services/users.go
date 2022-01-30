@@ -1,12 +1,14 @@
 package services
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/omeid/pgerror"
 	"github.com/rs/zerolog/log"
 	"github.com/sultaniman/confetti/platform/entities"
 	"github.com/sultaniman/confetti/platform/http"
+	"github.com/sultaniman/confetti/platform/mailer"
 	"github.com/sultaniman/confetti/platform/repo"
 	"github.com/sultaniman/confetti/platform/schema"
 	"github.com/sultaniman/confetti/util"
@@ -26,7 +28,8 @@ type UserService interface {
 	UpdateEmail(userId uuid.UUID, user *schema.UpdateUserEmailRequest) (*schema.UserResponse, error)
 	UpdatePassword(userId uuid.UUID, emailUpdate *schema.UpdateUserPasswordRequest) (*schema.UserResponse, error)
 	ResetPasswordRequest(email string) (*schema.ActionCode, error)
-	CreateConfirmation(email string) (*schema.ActionCode, error)
+	CreateConfirmation(userId uuid.UUID) (*schema.ActionCode, error)
+	ResendConfirmation(userId uuid.UUID) error
 	ConfirmUser(code string) error
 	Delete(id uuid.UUID) (*schema.UserResponse, error)
 	Exists(userId uuid.UUID) bool
@@ -34,12 +37,14 @@ type UserService interface {
 }
 
 type userService struct {
-	usersRepo repo.UserRepo
+	usersRepo   repo.UserRepo
+	mailHandler mailer.Mailer
 }
 
-func NewUserService(usersRepo repo.UserRepo) UserService {
+func NewUserService(usersRepo repo.UserRepo, mailHandler mailer.Mailer) UserService {
 	return &userService{
-		usersRepo: usersRepo,
+		usersRepo:   usersRepo,
+		mailHandler: mailHandler,
 	}
 }
 
@@ -331,23 +336,28 @@ func (s *userService) ResetPasswordRequest(email string) (*schema.ActionCode, er
 	}, nil
 }
 
-func (s *userService) CreateConfirmation(email string) (*schema.ActionCode, error) {
-	if !s.usersRepo.EmailExists(email) {
-		return nil, http.NotFoundError("User not found")
+func (s *userService) CreateConfirmation(userId uuid.UUID) (*schema.ActionCode, error) {
+	user, err := s.usersRepo.Get(userId)
+	if err != nil {
+		return nil, s.handleError(err)
+	}
+
+	if user.IsConfirmed {
+		return nil, http.Conflict("User has already confirmed account")
 	}
 
 	actionCode, err := s.usersRepo.CreateActionCode(&entities.ActionCodeRequest{
 		Type:  "user_confirmations",
-		Email: email,
+		Email: user.Email,
 	})
 
 	if err != nil {
 		log.Error().
 			Err(err).
-			Str("email", email).
+			Str("email", user.Email).
 			Msg("Unable to create user confirmation")
 
-		return nil, http.InternalError(err)
+		return nil, s.handleError(err)
 	}
 
 	return &schema.ActionCode{
@@ -356,6 +366,25 @@ func (s *userService) CreateConfirmation(email string) (*schema.ActionCode, erro
 		Code:      actionCode.Code,
 		CreatedAt: actionCode.CreatedAt,
 	}, nil
+}
+
+func (s *userService) ResendConfirmation(userId uuid.UUID) error {
+	user, err := s.Get(userId)
+	if err != nil {
+		return err
+	}
+
+	confirmation, err := s.CreateConfirmation(user.ID)
+	if err != nil {
+		return err
+	}
+
+	err = s.mailHandler.SendConfirmationCode(user.Email, confirmation.Code)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *userService) Exists(userId uuid.UUID) bool {
@@ -379,5 +408,13 @@ func (s *userService) userToResponse(user *entities.User) *schema.UserResponse {
 		Password:    user.Password,
 		CreatedAt:   user.CreatedAt,
 		UpdatedAt:   user.UpdatedAt,
+	}
+}
+
+func (s *userService) handleError(err error) error {
+	if err == sql.ErrNoRows {
+		return http.NotFoundError("Card not found")
+	} else {
+		return http.InternalError(err)
 	}
 }

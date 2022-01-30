@@ -32,7 +32,7 @@ func App(handler *Handler) *fiber.App {
 	users.Put("/:user_id/password", handler.UpdatePassword)
 	users.Delete("/:user_id", handler.DeleteUser)
 
-	cards := app.Group("/c")
+	cards := app.Group("/cards")
 	cards.Use(authMiddleware)
 	cards.Post("/", handler.CreateCard)
 	cards.Get("/:card_id", handler.GetCard)
@@ -41,18 +41,18 @@ func App(handler *Handler) *fiber.App {
 	cards.Get("/:card_id/decrypt", handler.DecryptCard)
 	cards.Post("/new", handler.GenerateCard)
 
+	accounts := app.Group("/accounts")
+	accounts.Post("/register", handler.Register)
+	accounts.Get("/confirm/:code", handler.Confirm)
+	accounts.Post("/resend-confirmation", authMiddleware, handler.ResendConfirmation)
+	accounts.Post("/reset-password", handler.ResetPasswordRequest)
+	accounts.Post("/reset-password/:code", handler.ResetPassword)
+
 	auth := app.Group("/auth")
 	auth.Get("/jwks", handler.JWKS)
-	auth.Post("/register", handler.Register)
 	auth.Post("/token", handler.AuthTokenFlow)
 	auth.Post("/token/refresh", handler.RefreshToken)
 	auth.Delete("/token", handler.LogOut)
-
-	// Account related endpoints
-	auth.Get("/confirm/:code", handler.Confirm)
-	auth.Post("/confirm/resend", handler.ResendConfirmation)
-	auth.Post("/reset-password", handler.ResetPasswordRequest)
-	auth.Post("/reset-password/:code", handler.ResetPasswordRequest)
 
 	return app
 }

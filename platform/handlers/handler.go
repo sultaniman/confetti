@@ -33,7 +33,7 @@ func NewHandler(db *sqlx.DB, key *rsa.PrivateKey) (*Handler, error) {
 	mailerHandler := mailer.GetMailer()
 	userRepo := repo.NewUserRepo(baseRepo)
 	cardRepo := repo.NewCardRepo(baseRepo)
-	userService := services.NewUserService(userRepo)
+	userService := services.NewUserService(userRepo, mailerHandler)
 	cardService := services.NewCardService(userRepo, cardRepo, key)
 	jwxService, err := services.NewJWXService(key)
 	if err != nil {

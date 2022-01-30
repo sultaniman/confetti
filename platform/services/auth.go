@@ -142,7 +142,7 @@ func (a *authService) Register(registerPayload *schema.RegisterRequest) error {
 	if a.usersService.EmailExists(registerPayload.Email) {
 		return http.Conflict("E-mail is taken by someone else")
 	}
-	_, err := a.usersService.Create(&schema.NewUserRequest{
+	user, err := a.usersService.Create(&schema.NewUserRequest{
 		FullName: "",
 		Email:    registerPayload.Email,
 		Password: registerPayload.Password,
@@ -150,7 +150,7 @@ func (a *authService) Register(registerPayload *schema.RegisterRequest) error {
 		Settings: []byte("{}"),
 	})
 
-	confirmation, err := a.usersService.CreateConfirmation(registerPayload.Email)
+	confirmation, err := a.usersService.CreateConfirmation(user.ID)
 	if err != nil {
 		return err
 	}
