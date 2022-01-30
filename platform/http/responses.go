@@ -40,6 +40,14 @@ func InternalError(err error) *shared.ServiceError {
 	}
 }
 
+func InternalErrorWithMessage(err string) *shared.ServiceError {
+	return &shared.ServiceError{
+		Response:   err,
+		StatusCode: fiber.StatusInternalServerError,
+		ErrorCode:  shared.ServerError,
+	}
+}
+
 func Conflict(message string) *shared.ServiceError {
 	return &shared.ServiceError{
 		Response:             message,

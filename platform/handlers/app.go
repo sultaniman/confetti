@@ -47,6 +47,8 @@ func App(handler *Handler) *fiber.App {
 	auth.Post("/token", handler.AuthTokenFlow)
 	auth.Post("/token/refresh", handler.RefreshToken)
 	auth.Delete("/token", handler.LogOut)
+
+	// Account related endpoints
 	auth.Get("/confirm/:code", handler.Confirm)
 	auth.Post("/confirm/resend", handler.ResendConfirmation)
 	auth.Post("/reset-password", handler.ResetPasswordRequest)

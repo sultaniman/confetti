@@ -6,6 +6,13 @@ import (
 	"time"
 )
 
+type ActionCodeType string
+
+const (
+	UserConfirmations ActionCodeType = "user_confirmations"
+	PasswordResets    ActionCodeType = "password_resets"
+)
+
 type NewUser struct {
 	FullName    string
 	Email       string
@@ -50,7 +57,6 @@ type ActionCodeRequest struct {
 }
 
 type ActionCodeCheck struct {
-	Type string
 	Code string
-	TTL  time.Duration
+	Type ActionCodeType
 }

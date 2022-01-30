@@ -10,6 +10,12 @@ import (
 	"github.com/sultaniman/confetti/platform/repo"
 	"github.com/sultaniman/confetti/platform/schema"
 	"github.com/sultaniman/confetti/util"
+	"time"
+)
+
+const (
+	UserConfirmationTTL = time.Hour
+	PasswordResetTTL    = 15 * time.Minute
 )
 
 type UserService interface {
@@ -21,6 +27,7 @@ type UserService interface {
 	UpdatePassword(userId uuid.UUID, emailUpdate *schema.UpdateUserPasswordRequest) (*schema.UserResponse, error)
 	ResetPasswordRequest(email string) (*schema.ActionCode, error)
 	CreateConfirmation(email string) (*schema.ActionCode, error)
+	ConfirmUser(code string) error
 	Delete(id uuid.UUID) (*schema.UserResponse, error)
 	Exists(userId uuid.UUID) bool
 	EmailExists(email string) bool
@@ -249,6 +256,33 @@ func (s *userService) UpdatePassword(userId uuid.UUID, passwordUpdate *schema.Up
 	}
 
 	return s.userToResponse(updatedUser), nil
+}
+
+func (s *userService) ConfirmUser(code string) error {
+	actionCode, err := s.usersRepo.GetActionCode(&entities.ActionCodeCheck{
+		Type: entities.UserConfirmations,
+		Code: code,
+	})
+
+	if err != nil {
+		return http.NotFoundError("Confirmation code not found")
+	}
+
+	if actionCode.CreatedAt.Add(UserConfirmationTTL).Before(time.Now().UTC()) {
+		return http.Conflict("Confirmation code has already expired")
+	}
+
+	_, err = s.usersRepo.ConfirmUser(actionCode.UserId)
+	if err != nil {
+		log.Error().
+			Err(err).
+			Str("user_id", actionCode.UserId.String()).
+			Msg(fmt.Sprintf("Unable to confirm user"))
+
+		return http.InternalErrorWithMessage("Something went wrong during conifmation")
+	}
+
+	return nil
 }
 
 func (s *userService) Delete(userId uuid.UUID) (*schema.UserResponse, error) {

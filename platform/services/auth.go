@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"github.com/lestrrat-go/jwx/jwt"
+	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 	"github.com/sultaniman/confetti/platform/http"
 	"github.com/sultaniman/confetti/platform/mailer"
 	"github.com/sultaniman/confetti/platform/schema"
 	"github.com/sultaniman/confetti/util"
-	"github.com/lestrrat-go/jwx/jwt"
-	"github.com/rs/zerolog/log"
-	"github.com/spf13/viper"
 	"time"
 )
 
@@ -18,6 +18,7 @@ type AuthService interface {
 	AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.LoginRequest) (*schema.TokenResponse, error)
 	RefreshAuthToken(ctx *fiber.Ctx) (*schema.TokenResponse, error)
 	Register(registerPayload *schema.RegisterRequest) error
+	ConfirmUser(code string) error
 	ResetPasswordRequest(resetPasswordPayload *schema.ResetPasswordRequest) error
 	Logout(ctx *fiber.Ctx) error
 }
@@ -161,6 +162,10 @@ func (a *authService) Register(registerPayload *schema.RegisterRequest) error {
 	}
 
 	return nil
+}
+
+func (a *authService) ConfirmUser(code string) error {
+	return a.usersService.ConfirmUser(code)
 }
 
 func (a *authService) ResetPasswordRequest(resetPasswordPayload *schema.ResetPasswordRequest) error {

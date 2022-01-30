@@ -3,13 +3,13 @@ package services
 import (
 	"crypto/rsa"
 	"github.com/gofiber/fiber/v2"
-	"github.com/sultaniman/confetti/platform/http"
-	"github.com/sultaniman/confetti/platform/schema"
-	"github.com/sultaniman/confetti/platform/shared"
 	"github.com/lestrrat-go/jwx/jwa"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/spf13/viper"
+	"github.com/sultaniman/confetti/platform/http"
+	"github.com/sultaniman/confetti/platform/schema"
+	"github.com/sultaniman/confetti/platform/shared"
 	"time"
 )
 
