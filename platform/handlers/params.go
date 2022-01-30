@@ -133,7 +133,7 @@ func (p *ParamHandler) RegisterPayload(ctx *fiber.Ctx) (*schema.RegisterRequest,
 	return registerRequestPayload, nil
 }
 
-func (p *ParamHandler) ResetPasswordPayload(ctx *fiber.Ctx) (*schema.ResetPasswordRequest, error) {
+func (p *ParamHandler) ResetPasswordRequestPayload(ctx *fiber.Ctx) (*schema.ResetPasswordRequest, error) {
 	resetPasswordRequest := &schema.ResetPasswordRequest{}
 	if err := ctx.BodyParser(resetPasswordRequest); err != nil {
 		return nil, &shared.ServiceError{
@@ -144,6 +144,19 @@ func (p *ParamHandler) ResetPasswordPayload(ctx *fiber.Ctx) (*schema.ResetPasswo
 	}
 
 	return resetPasswordRequest, nil
+}
+
+func (p *ParamHandler) NewPasswordPayload(ctx *fiber.Ctx) (*schema.NewPasswordRequest, error) {
+	newPasswordRequest := &schema.NewPasswordRequest{}
+	if err := ctx.BodyParser(newPasswordRequest); err != nil {
+		return nil, &shared.ServiceError{
+			Response:   err,
+			StatusCode: fiber.StatusInternalServerError,
+			ErrorCode:  shared.ServerError,
+		}
+	}
+
+	return newPasswordRequest, nil
 }
 
 // Card params

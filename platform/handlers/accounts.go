@@ -33,7 +33,7 @@ func (h *Handler) Register(ctx *fiber.Ctx) error {
 // @Success 204 {string} nil reset link was sent
 // @Router /accounts/reset-password [post]
 func (h *Handler) ResetPasswordRequest(ctx *fiber.Ctx) error {
-	resetPasswordPayload, err := h.Params.ResetPasswordPayload(ctx)
+	resetPasswordPayload, err := h.Params.ResetPasswordRequestPayload(ctx)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,12 @@ func (h *Handler) ResetPasswordRequest(ctx *fiber.Ctx) error {
 // @Success 204 {string} nil reset link was sent
 // @Router /accounts/reset-password/{code} [post]
 func (h *Handler) ResetPassword(ctx *fiber.Ctx) error {
-	// TODO(impl)
+	_, err := h.Params.NewPasswordPayload(ctx)
+	if err != nil {
+		return err
+	}
+
+	//_ = h.AuthService.ResetPasswordRequest(resetPasswordPayload)
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
 
