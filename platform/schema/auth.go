@@ -15,7 +15,7 @@ type ResetPasswordRequest struct {
 }
 
 type NewPasswordRequest struct {
-	Email string
+	Password string
 }
 
 type TokenResponse struct {

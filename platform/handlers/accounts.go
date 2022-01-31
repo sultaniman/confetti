@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/sultaniman/confetti/platform/http"
 )
 
 // Register godoc
@@ -50,12 +51,23 @@ func (h *Handler) ResetPasswordRequest(ctx *fiber.Ctx) error {
 // @Success 204 {string} nil reset link was sent
 // @Router /accounts/reset-password/{code} [post]
 func (h *Handler) ResetPassword(ctx *fiber.Ctx) error {
-	_, err := h.Params.NewPasswordPayload(ctx)
+	code := ctx.Params("code")
+	passwordResetCode, err := h.UserService.GetResetPasswordCode(code)
+	if err != nil {
+		return http.BadRequestWithMessage("Invalid password reset code")
+	}
+
+	newPasswordRequest, err := h.Params.NewPasswordPayload(ctx)
 	if err != nil {
 		return err
 	}
 
-	//_ = h.AuthService.ResetPasswordRequest(resetPasswordPayload)
+	// TODO: check if password is the same
+	err = h.UserService.ResetPassword(passwordResetCode.UserId, newPasswordRequest.Password)
+	if err != nil {
+		return err
+	}
+
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
 

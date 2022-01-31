@@ -28,6 +28,8 @@ type UserService interface {
 	UpdateEmail(userId uuid.UUID, user *schema.UpdateUserEmailRequest) (*schema.UserResponse, error)
 	UpdatePassword(userId uuid.UUID, emailUpdate *schema.UpdateUserPasswordRequest) (*schema.UserResponse, error)
 	ResetPasswordRequest(email string) (*schema.ActionCode, error)
+	GetResetPasswordCode(code string) (*schema.ActionCode, error)
+	ResetPassword(userId uuid.UUID, newPassword string) error
 	CreateConfirmation(userId uuid.UUID) (*schema.ActionCode, error)
 	ResendConfirmation(userId uuid.UUID) error
 	ConfirmUser(code string) error
@@ -334,6 +336,69 @@ func (s *userService) ResetPasswordRequest(email string) (*schema.ActionCode, er
 		Code:      passwordReset.Code,
 		CreatedAt: passwordReset.CreatedAt,
 	}, nil
+}
+
+func (s *userService) GetResetPasswordCode(code string) (*schema.ActionCode, error) {
+	actionCode, err := s.usersRepo.GetActionCode(&entities.ActionCodeCheck{
+		Type: entities.PasswordResets,
+		Code: code,
+	})
+
+	if err != nil {
+		log.Error().
+			Err(err).
+			Msg(fmt.Sprintf("Password reset code [%s] not found", code))
+
+		return nil, err
+	}
+
+	if actionCode.CreatedAt.Add(UserConfirmationTTL).Before(time.Now().UTC()) {
+		log.Error().
+			Err(err).
+			Str("user_id", actionCode.UserId.String()).
+			Msg(fmt.Sprintf("Password reset code [%s] has already expired", code))
+
+		return nil, err
+	}
+
+	return &schema.ActionCode{
+		ID:        actionCode.ID,
+		UserId:    actionCode.UserId,
+		Code:      actionCode.Code,
+		CreatedAt: actionCode.CreatedAt,
+	}, nil
+}
+
+func (s *userService) ResetPassword(userId uuid.UUID, newPassword string) error {
+	if !s.usersRepo.Exists(userId) {
+		return http.NotFoundError("User not found")
+	}
+
+	if !util.IsStrongPassword(newPassword) {
+		log.Warn().Msg("New password is weak")
+		return http.InsecurePasswordError()
+	}
+
+	password, err := util.HashPassword(newPassword)
+	if err != nil {
+		log.Error().
+			Err(err).
+			Msg(fmt.Sprintf("Unable to generate password for user '%s'", userId.String()))
+
+		return http.InternalError(err)
+	}
+
+	_, err = s.usersRepo.UpdatePassword(userId, password)
+	if err != nil {
+		log.Error().
+			Err(err).
+			Str("user_id", userId.String()).
+			Msg(fmt.Sprintf("Unable to update password for user"))
+
+		return http.InternalError(err)
+	}
+
+	return nil
 }
 
 func (s *userService) CreateConfirmation(userId uuid.UUID) (*schema.ActionCode, error) {
