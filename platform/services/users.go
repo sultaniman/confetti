@@ -315,7 +315,7 @@ func (s *userService) ResetPasswordRequest(email string) (*schema.ActionCode, er
 	}
 
 	passwordReset, err := s.usersRepo.CreateActionCode(&entities.ActionCodeRequest{
-		Type:  "password_resets",
+		Type:  string(entities.PasswordResets),
 		Email: email,
 	})
 
@@ -323,7 +323,7 @@ func (s *userService) ResetPasswordRequest(email string) (*schema.ActionCode, er
 		log.Error().
 			Err(err).
 			Str("email", email).
-			Msg("Unable to reset password user")
+			Msg("Unable to reset password")
 
 		return nil, http.InternalError(err)
 	}
