@@ -23,7 +23,7 @@ CO_ACCESS_TOKEN_TTL=1h
 
 ## Migrate
 
-To create database tables
+First create database then run migrations to create tables
 
 ```sh
 $ ./confetti migrate
