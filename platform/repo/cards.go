@@ -7,9 +7,15 @@ import (
 	"time"
 )
 
+type FilterSpec struct {
+	UserId *uuid.UUID
+	ID     *uuid.UUID
+}
+
 //go:generate mockgen -source=cards.go -destination=../mocks/cards.go -package=mocks
 type CardRepo interface {
 	Get(id uuid.UUID) (*entities.Card, error)
+	List(filterSpec *FilterSpec) ([]entities.Card, error)
 	Create(card *entities.NewCard) (*entities.Card, error)
 	Update(cardId uuid.UUID, newTitle string) (*entities.Card, error)
 	Delete(id uuid.UUID) error
@@ -38,6 +44,31 @@ func (c *cardRepo) Get(id uuid.UUID) (*entities.Card, error) {
 
 	card := new(entities.Card)
 	return card, c.Base.DB.Get(card, query, args...)
+}
+
+func (c *cardRepo) List(filterSpec *FilterSpec) ([]entities.Card, error) {
+	qs := c.Base.
+		Select("cards")
+
+	filters := sq.Eq{}
+	if filterSpec.ID != nil {
+		filters["id"] = filterSpec.ID
+	}
+
+	if filterSpec.UserId != nil {
+		filters["user_id"] = filterSpec.UserId
+	}
+
+	query, args, err := qs.
+		Where(filters).
+		ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	cards := new([]entities.Card)
+	return *cards, c.Base.DB.Select(cards, query, args...)
 }
 
 func (c *cardRepo) Create(card *entities.NewCard) (*entities.Card, error) {

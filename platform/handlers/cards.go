@@ -53,6 +53,29 @@ func (h *Handler) CreateCard(ctx *fiber.Ctx) error {
 		JSON(card)
 }
 
+// ListCards godoc
+// @Summary List cards
+// @Description List cards
+// @Tags cards
+// @Produce json
+// @Success 200 {object} []schema.CardResponse
+// @Router / [post]
+func (h *Handler) ListCards(ctx *fiber.Ctx) error {
+	userId, err := h.Params.GetUserIdFromLocals(ctx)
+	if err != nil {
+		return err
+	}
+
+	cards, err := h.CardService.List(*userId)
+	if err != nil {
+		return err
+	}
+
+	return ctx.
+		Status(fiber.StatusCreated).
+		JSON(cards)
+}
+
 // GetCard godoc
 // @Summary Get card by id
 // @Description Get card by id

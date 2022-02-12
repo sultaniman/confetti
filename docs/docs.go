@@ -61,19 +61,22 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create card",
+                "description": "List cards",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "cards"
                 ],
-                "summary": "Create card",
+                "summary": "List cards",
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schema.CardResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/schema.CardResponse"
+                            }
                         }
                     }
                 }

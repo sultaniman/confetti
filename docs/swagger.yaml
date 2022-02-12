@@ -107,15 +107,17 @@ paths:
       tags:
       - cards
     post:
-      description: Create card
+      description: List cards
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
-            $ref: '#/definitions/schema.CardResponse'
-      summary: Create card
+            items:
+              $ref: '#/definitions/schema.CardResponse'
+            type: array
+      summary: List cards
       tags:
       - cards
     put:
