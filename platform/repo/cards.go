@@ -61,6 +61,7 @@ func (c *cardRepo) List(filterSpec *FilterSpec) ([]entities.Card, error) {
 
 	query, args, err := qs.
 		Where(filters).
+		OrderBy("created_at DESC").
 		ToSql()
 
 	if err != nil {
