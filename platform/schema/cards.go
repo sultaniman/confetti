@@ -30,7 +30,6 @@ type CardResponse struct {
 	UserId        uuid.UUID
 	Title         string
 	EncryptedData string
-	EncryptedKey  string
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
