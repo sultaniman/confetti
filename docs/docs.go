@@ -436,9 +436,6 @@ var doc = `{
                 "encryptedData": {
                     "type": "string"
                 },
-                "encryptedKey": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "string"
                 },
