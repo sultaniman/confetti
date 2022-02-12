@@ -60,6 +60,8 @@ definitions:
         type: boolean
       isAdmin:
         type: boolean
+      isConfirmed:
+        type: boolean
       provider:
         type: string
       settings:
@@ -128,6 +130,71 @@ paths:
       summary: Update card
       tags:
       - cards
+  /accounts/confirm/{code}:
+    get:
+      description: Confirmation for user accounts
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Confirmation for user accounts
+      tags:
+      - accounts
+  /accounts/register:
+    post:
+      description: Register using email and password
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Register using email and password
+      tags:
+      - accounts
+  /accounts/resend-confirmation:
+    post:
+      description: Confirmation for user accounts
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Confirmation for user accounts
+      tags:
+      - accounts
+  /accounts/reset-password:
+    post:
+      description: Reset password using email
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Reset password using email
+      tags:
+      - accounts
+  /accounts/reset-password/{code}:
+    post:
+      description: Reset password for a given reset code
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Reset password for a given reset code
+      tags:
+      - accounts
   /auth/jwks:
     get:
       description: Returns jwks details
@@ -167,19 +234,6 @@ paths:
           schema:
             type: string
       summary: Logout user
-      tags:
-      - auth
-  /auth/register:
-    post:
-      description: Register using email and password
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            type: string
-      summary: Register using email and password
       tags:
       - auth
   /new:

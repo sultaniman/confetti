@@ -97,6 +97,106 @@ var doc = `{
                 }
             }
         },
+        "/accounts/confirm/{code}": {
+            "get": {
+                "description": "Confirmation for user accounts",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Confirmation for user accounts",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/register": {
+            "post": {
+                "description": "Register using email and password",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Register using email and password",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/resend-confirmation": {
+            "post": {
+                "description": "Confirmation for user accounts",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Confirmation for user accounts",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/reset-password": {
+            "post": {
+                "description": "Reset password using email",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Reset password using email",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/reset-password/{code}": {
+            "post": {
+                "description": "Reset password for a given reset code",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Reset password for a given reset code",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/jwks": {
             "get": {
                 "description": "Returns jwks details",
@@ -150,26 +250,6 @@ var doc = `{
                     "auth"
                 ],
                 "summary": "Logout user",
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/register": {
-            "post": {
-                "description": "Register using email and password",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Register using email and password",
                 "responses": {
                     "204": {
                         "description": "No Content",
@@ -436,6 +516,9 @@ var doc = `{
                     "type": "boolean"
                 },
                 "isAdmin": {
+                    "type": "boolean"
+                },
+                "isConfirmed": {
                     "type": "boolean"
                 },
                 "provider": {
