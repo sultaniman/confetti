@@ -31,7 +31,8 @@ $ ./confetti migrate
 
 ## Run the server
 
-To create database tables
+To run the server the following command should be used once it starts
+it is ready to accept requests at `http://localhost:4000`
 
 ```sh
 $ ./confetti serve
