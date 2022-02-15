@@ -166,6 +166,7 @@ func (c *cardService) cardToResponse(card *entities.Card) *schema.CardResponse {
 	return &schema.CardResponse{
 		ID:            card.ID,
 		UserId:        card.UserId,
+		Title:         card.Title,
 		EncryptedData: card.EncryptedData,
 		CreatedAt:     card.CreatedAt,
 		UpdatedAt:     card.UpdatedAt,
