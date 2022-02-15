@@ -208,7 +208,7 @@ paths:
       - auth
   /auth/login:
     post:
-      description: Refresh access token
+      description: Authenticate user with email, password and issue access tokens
       produces:
       - application/json
       responses:
@@ -220,7 +220,7 @@ paths:
           description: Forbidden
           schema:
             $ref: '#/definitions/shared.HTTPError'
-      summary: Refresh access token
+      summary: Authenticate user with email, password and issue access tokens
       tags:
       - auth
   /auth/logout:
@@ -234,6 +234,23 @@ paths:
           schema:
             type: string
       summary: Logout user
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      description: Refresh access token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.TokenResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/shared.HTTPError'
+      summary: Refresh access token
       tags:
       - auth
   /new:

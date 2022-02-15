@@ -219,14 +219,14 @@ var doc = `{
         },
         "/auth/login": {
             "post": {
-                "description": "Refresh access token",
+                "description": "Authenticate user with email, password and issue access tokens",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "auth"
                 ],
-                "summary": "Refresh access token",
+                "summary": "Authenticate user with email, password and issue access tokens",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -258,6 +258,32 @@ var doc = `{
                         "description": "No Content",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "description": "Refresh access token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh access token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.TokenResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/shared.HTTPError"
                         }
                     }
                 }
