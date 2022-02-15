@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/sultaniman/confetti/platform/middleware"
 	"github.com/sultaniman/confetti/platform/shared"
 )
@@ -11,6 +12,7 @@ func App(handler *Handler) *fiber.App {
 		DisableStartupMessage: true,
 		ErrorHandler:          shared.ErrorHandler,
 	})
+	app.Use(cors.New())
 
 	authMiddleware := middleware.AuthMiddleware(
 		"Authorization",
