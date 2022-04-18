@@ -53,4 +53,5 @@ func init() {
 	viper.SetDefault("access_token_ttl", "1h")     // 1 hour
 	viper.SetDefault("mailer", "dummy")
 	viper.SetDefault("from_email", "no-reply@secura.team")
+	viper.SetDefault("verbose", false)
 }
