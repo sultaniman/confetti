@@ -11,7 +11,7 @@ import (
 // @Produce json
 // @Failure 403 {object} shared.HTTPError Invalid auth details
 // @Success 200 {object} schema.TokenResponse
-// @Router /auth/login [post]
+// @Router /token [post]
 func (h *Handler) AuthTokenFlow(ctx *fiber.Ctx) error {
 	loginPayload, err := h.Params.LoginPayload(ctx)
 	if err != nil {
@@ -33,7 +33,7 @@ func (h *Handler) AuthTokenFlow(ctx *fiber.Ctx) error {
 // @Produce json
 // @Failure 403 {object} shared.HTTPError Invalid auth details
 // @Success 200 {object} schema.TokenResponse
-// @Router /auth/refresh [post]
+// @Router /token/refresh [post]
 func (h *Handler) RefreshToken(ctx *fiber.Ctx) error {
 	tokenResponse, err := h.AuthService.RefreshAuthToken(ctx)
 	if err != nil {

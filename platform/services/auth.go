@@ -47,7 +47,7 @@ func (a *authService) AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.L
 
 	user, err := a.usersService.GetByEmail(loginRequest.Email)
 	if err != nil {
-		return nil, http.UnauthorizedError("E-mail or password wrong")
+		return nil, http.UnauthorizedError("Wrong e-mail or password")
 	}
 
 	if !user.IsActive {
@@ -56,7 +56,7 @@ func (a *authService) AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.L
 
 	err = util.CheckPassword(user.Password, loginRequest.Password)
 	if err != nil {
-		return nil, http.UnauthorizedError("E-mail or password wrong")
+		return nil, http.UnauthorizedError("Wrong e-mail or password")
 	}
 
 	// issue access_token (short-lived) and refresh_token (to update it)
@@ -70,7 +70,7 @@ func (a *authService) AccessTokenAuthFlow(ctx *fiber.Ctx, loginRequest *schema.L
 			Msg(fmt.Sprintf("JWT Refresh token unable to set %s", jwt.ExpirationKey))
 	}
 
-	err = refreshToken.Set(jwt.SubjectKey, user.ID)
+	err = refreshToken.Set(jwt.SubjectKey, user.ID.String())
 	if err != nil {
 		log.Info().
 			Str("user_id", user.ID.String()).
@@ -109,6 +109,10 @@ func (a *authService) RefreshAuthToken(ctx *fiber.Ctx) (*schema.TokenResponse, e
 	return a.jwxService.RefreshAuthToken(
 		ctx.Cookies(RefreshTokenCookieName, ""),
 		func(refreshToken jwt.Token) (jwt.Token, error) {
+			if refreshToken.Subject() == "" {
+				return nil, http.UnauthorizedError("Invalid refresh token")
+			}
+
 			userID := uuid.MustParse(refreshToken.Subject())
 			if !a.usersService.Exists(userID) {
 				return nil, http.NotFoundError("User not found")
