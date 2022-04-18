@@ -3,6 +3,8 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/sultaniman/confetti/platform/middleware"
 	"github.com/sultaniman/confetti/platform/shared"
 )
@@ -12,7 +14,14 @@ func App(handler *Handler) *fiber.App {
 		DisableStartupMessage: true,
 		ErrorHandler:          shared.ErrorHandler,
 	})
+
 	app.Use(cors.New())
+	app.Use(requestid.New())
+
+	app.Use(logger.New(logger.Config{
+		// For more options, see the Config section
+		Format: "${pid} ${locals:requestid} ${status} - ${method} ${path}\n",
+	}))
 
 	authMiddleware := middleware.AuthMiddleware(
 		"Authorization",
