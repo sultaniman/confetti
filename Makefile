@@ -1,4 +1,4 @@
-image := 811078382625.dkr.ecr.us-east-1.amazonaws.com/confetti/confetti
+image := confetti
 tag := latest
 artifact := confetti
 git_hash ?= $(shell git log -1 --pretty=format:%h)

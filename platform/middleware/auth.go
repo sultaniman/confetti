@@ -42,7 +42,12 @@ func AuthMiddleware(authHeader string, authRequired bool, jwks *jwk.Set) fiber.H
 			}
 		}
 
-		ctx.Locals("user_id", payload.Subject())
+		subject := payload.Subject()
+		if subject == "" {
+			return http.ForbiddenError("Invalid token")
+		}
+
+		ctx.Locals("user_id", subject)
 		return ctx.Next()
 	}
 }

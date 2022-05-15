@@ -45,13 +45,13 @@ func App(handler *Handler) *fiber.App {
 
 	cards := app.Group("/cards")
 	cards.Use(authMiddleware)
+	cards.Post("/new", handler.GenerateCard)
 	cards.Get("/", handler.ListCards)
 	cards.Post("/", handler.CreateCard)
 	cards.Get("/:card_id", handler.GetCard)
 	cards.Delete("/:card_id", handler.DeleteCard)
 	cards.Put("/:card_id", handler.UpdateCard)
 	cards.Get("/:card_id/decrypt", handler.DecryptCard)
-	cards.Post("/new", handler.GenerateCard)
 
 	accounts := app.Group("/accounts")
 	accounts.Post("/register", handler.Register)

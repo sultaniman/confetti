@@ -126,7 +126,7 @@ func (a *authService) RefreshAuthToken(ctx *fiber.Ctx) (*schema.TokenResponse, e
 					Msg(fmt.Sprintf("JWT Access token unable to set %s", jwt.ExpirationKey))
 			}
 
-			err = authToken.Set(jwt.SubjectKey, userID)
+			err = authToken.Set(jwt.SubjectKey, userID.String())
 			if err != nil {
 				log.Info().
 					Str("user_id", userID.String()).

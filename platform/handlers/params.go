@@ -166,8 +166,8 @@ func (p *ParamHandler) CardOptionsPayload(c *fiber.Ctx) (*schema.CardOptions, er
 	if err := c.BodyParser(cardOptions); err != nil {
 		return nil, &shared.ServiceError{
 			Response:   err,
-			StatusCode: fiber.StatusInternalServerError,
-			ErrorCode:  shared.ServerError,
+			StatusCode: fiber.StatusBadRequest,
+			ErrorCode:  shared.BadRequest,
 		}
 	}
 

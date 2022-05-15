@@ -72,7 +72,7 @@ func (h *Handler) ListCards(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.
-		Status(fiber.StatusCreated).
+		Status(fiber.StatusOK).
 		JSON(cards)
 }
 
@@ -82,7 +82,7 @@ func (h *Handler) ListCards(ctx *fiber.Ctx) error {
 // @Tags cards
 // @Produce json
 // @Success 200 {object} schema.CardResponse
-// @Router / [get]
+// @Router /{id} [get]
 func (h *Handler) GetCard(ctx *fiber.Ctx) error {
 	claim, err := h.Params.EnsureCardClaim(ctx)
 	if err != nil {
@@ -103,7 +103,7 @@ func (h *Handler) GetCard(ctx *fiber.Ctx) error {
 // @Tags cards
 // @Produce json
 // @Success 204 {string} nil update succeeded
-// @Router / [put]
+// @Router /{id} [put]
 func (h *Handler) UpdateCard(ctx *fiber.Ctx) error {
 	claim, err := h.Params.EnsureCardClaim(ctx)
 	if err != nil {
@@ -129,7 +129,7 @@ func (h *Handler) UpdateCard(ctx *fiber.Ctx) error {
 // @Tags cards
 // @Produce json
 // @Success 204 {string} nil deletion is successful
-// @Router / [delete]
+// @Router /{id} [delete]
 func (h *Handler) DeleteCard(ctx *fiber.Ctx) error {
 	claim, err := h.Params.EnsureCardClaim(ctx)
 	if err != nil {
@@ -150,7 +150,7 @@ func (h *Handler) DeleteCard(ctx *fiber.Ctx) error {
 // @Tags cards
 // @Produce json
 // @Success 200 {object} schema.PlainCardResponse
-// @Router / [get]
+// @Router /{id} [get]
 func (h *Handler) DecryptCard(ctx *fiber.Ctx) error {
 	claim, err := h.Params.EnsureCardClaim(ctx)
 	if err != nil {
