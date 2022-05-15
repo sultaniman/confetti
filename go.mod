@@ -15,9 +15,9 @@ require (
 	github.com/lib/pq v1.8.0
 	github.com/omeid/pgerror v0.0.0-20201018020948-42c66c4d27d4
 	github.com/rs/zerolog v1.26.1
-	github.com/spf13/cobra v1.3.0
+	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.10.1
-	github.com/sultaniman/pwc v0.0.0-20220129174023-48c0396a2d50
+	github.com/sultaniman/pwc v0.0.0-20220515213356-151dd881faf4
 	github.com/swaggo/swag v1.7.8
 	github.com/wagslane/go-password-validator v0.3.0
 	golang.org/x/crypto v0.0.0-20211215165025-cf75a172585e
@@ -34,6 +34,7 @@ require (
 	github.com/docker/docker v20.10.12+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/fatih/color v1.13.0 // indirect
 	github.com/fogleman/gg v1.3.1-0.20210928143535-8febc0f526ad // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-fonts/dejavu v0.1.0 // indirect
@@ -44,6 +45,7 @@ require (
 	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/goccy/go-json v0.9.1 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
+	github.com/gookit/color v1.5.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20160803190731-bd40a432e4c7 // indirect
@@ -58,6 +60,8 @@ require (
 	github.com/lestrrat-go/option v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
@@ -72,6 +76,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.31.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
 	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
 	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
