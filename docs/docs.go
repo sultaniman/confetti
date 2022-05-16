@@ -24,42 +24,6 @@ var doc = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/": {
-            "get": {
-                "description": "Decrypt card by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cards"
-                ],
-                "summary": "Decrypt card by id",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.PlainCardResponse"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update card",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cards"
-                ],
-                "summary": "Update card",
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "List cards",
                 "produces": [
@@ -77,24 +41,6 @@ var doc = `{
                             "items": {
                                 "$ref": "#/definitions/schema.CardResponse"
                             }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete card by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cards"
-                ],
-                "summary": "Delete card by id",
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "type": "string"
                         }
                     }
                 }
@@ -217,32 +163,6 @@ var doc = `{
                 }
             }
         },
-        "/auth/login": {
-            "post": {
-                "description": "Authenticate user with email, password and issue access tokens",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Authenticate user with email, password and issue access tokens",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.TokenResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/shared.HTTPError"
-                        }
-                    }
-                }
-            }
-        },
         "/auth/logout": {
             "delete": {
                 "description": "Logout user",
@@ -258,32 +178,6 @@ var doc = `{
                         "description": "No Content",
                         "schema": {
                             "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/refresh": {
-            "post": {
-                "description": "Refresh access token",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Refresh access token",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.TokenResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/shared.HTTPError"
                         }
                     }
                 }
@@ -324,6 +218,58 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/schema.HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "description": "Authenticate user with email, password and issue access tokens",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Authenticate user with email, password and issue access tokens",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.TokenResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/shared.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/token/refresh": {
+            "post": {
+                "description": "Refresh access token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh access token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.TokenResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/shared.HTTPError"
                         }
                     }
                 }
@@ -446,6 +392,62 @@ var doc = `{
                         "description": "Accepted",
                         "schema": {
                             "$ref": "#/definitions/schema.UserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/{id}": {
+            "get": {
+                "description": "Decrypt card by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cards"
+                ],
+                "summary": "Decrypt card by id",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.PlainCardResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update card",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cards"
+                ],
+                "summary": "Update card",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete card by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cards"
+                ],
+                "summary": "Delete card by id",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }

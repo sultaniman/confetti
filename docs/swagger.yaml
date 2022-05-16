@@ -80,6 +80,21 @@ info:
   contact: {}
 paths:
   /:
+    post:
+      description: List cards
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/schema.CardResponse'
+            type: array
+      summary: List cards
+      tags:
+      - cards
+  /{id}:
     delete:
       description: Delete card by id
       produces:
@@ -102,20 +117,6 @@ paths:
           schema:
             $ref: '#/definitions/schema.PlainCardResponse'
       summary: Decrypt card by id
-      tags:
-      - cards
-    post:
-      description: List cards
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/schema.CardResponse'
-            type: array
-      summary: List cards
       tags:
       - cards
     put:
@@ -206,23 +207,6 @@ paths:
       summary: Returns jwks details
       tags:
       - auth
-  /auth/login:
-    post:
-      description: Authenticate user with email, password and issue access tokens
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.TokenResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/shared.HTTPError'
-      summary: Authenticate user with email, password and issue access tokens
-      tags:
-      - auth
   /auth/logout:
     delete:
       description: Logout user
@@ -234,23 +218,6 @@ paths:
           schema:
             type: string
       summary: Logout user
-      tags:
-      - auth
-  /auth/refresh:
-    post:
-      description: Refresh access token
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.TokenResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/shared.HTTPError'
-      summary: Refresh access token
       tags:
       - auth
   /new:
@@ -279,6 +246,40 @@ paths:
       summary: Get system health status
       tags:
       - system
+  /token:
+    post:
+      description: Authenticate user with email, password and issue access tokens
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.TokenResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/shared.HTTPError'
+      summary: Authenticate user with email, password and issue access tokens
+      tags:
+      - auth
+  /token/refresh:
+    post:
+      description: Refresh access token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.TokenResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/shared.HTTPError'
+      summary: Refresh access token
+      tags:
+      - auth
   /user:
     delete:
       description: Delete user
