@@ -150,7 +150,7 @@ func (h *Handler) DeleteCard(ctx *fiber.Ctx) error {
 // @Tags cards
 // @Produce json
 // @Success 200 {object} schema.PlainCardResponse
-// @Router /{id} [get]
+// @Router /{id}/decrypt [get]
 func (h *Handler) DecryptCard(ctx *fiber.Ctx) error {
 	claim, err := h.Params.EnsureCardClaim(ctx)
 	if err != nil {

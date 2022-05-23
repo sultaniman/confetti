@@ -154,6 +154,10 @@ func (a *authService) Register(registerPayload *schema.RegisterRequest) error {
 		Settings: []byte("{}"),
 	})
 
+	if err != nil {
+		return err
+	}
+
 	confirmation, err := a.usersService.CreateConfirmation(user.ID)
 	if err != nil {
 		return err
