@@ -14,11 +14,22 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 )
 
 type KeyLoader interface {
 	Load(path string) (*rsa.PrivateKey, error)
 }
+
+type EncryptionKey struct {
+	PrivateKey   *rsa.PrivateKey
+	KeyName      string
+	KeyID        string
+	Revoked      bool
+	InvalidAfter *time.Time
+}
+
+type KeySet []EncryptionKey
 
 // RemoteLoader load from block storage
 type RemoteLoader struct{}
