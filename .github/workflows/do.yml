@@ -30,7 +30,6 @@ jobs:
 
       - name: Build container image
         run: >
-          echo ${GITHUB_SHA:0:8}
           echo ${TAG}
 #        run: docker build -t $TAG .
 
