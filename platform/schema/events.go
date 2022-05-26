@@ -6,7 +6,7 @@ import (
 )
 
 type UserEventData struct {
-	ID          uuid.UUID       `json:"UserID"`
+	ID          uuid.UUID       `json:"ID"`
 	FullName    string          `json:"FullName"`
 	IsActive    bool            `json:"IsActive"`
 	IsConfirmed bool            `json:"IsConfirmed"`
