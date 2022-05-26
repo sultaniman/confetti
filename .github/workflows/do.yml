@@ -1,0 +1,50 @@
+name: Build image
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image version"
+        required: true
+
+env:
+  REGISTRY: "registry.digitalocean.com/confetti"
+  IMAGE_NAME: "confetti"
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      - name: Build container image
+        run: >
+          TAG=$($REGISTRY/$IMAGE_NAME:$GITHUB_SHA | head -c7)
+          docker build -t $TAG .
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Remove all old images
+        run: >
+          if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then
+            IMAGE_HASH=$(doctl registry repository list-tags $IMAGE_NAME | grep -o "sha.*");
+            doctl registry repository delete-manifest $IMAGE_NAME $IMAGE_HASH --force;
+          else
+            echo "No repository";
+          fi
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push $REGISTRY/$IMAGE_NAME:$GITHUB_SHA | head -c7
