@@ -19,6 +19,7 @@ env:
 
 jobs:
   build_and_push:
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
@@ -44,7 +45,8 @@ jobs:
             echo "No repository";
           fi
 
-      - name: Push image to DigitalOcean Container Registry
-        run: >
-          docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8} &&\
-          docker push ${REGISTRY}/${IMAGE_NAME}:latest
+      - name: Push image with hash to registry
+        run: docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8}
+
+      - name: Push latest image tag to registry
+        run: docker push ${REGISTRY}/${IMAGE_NAME}:latest
