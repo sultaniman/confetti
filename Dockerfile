@@ -9,6 +9,7 @@ RUN go mod download
 RUN go get github.com/golang/mock/mockgen
 
 COPY . .
+RUN go install github.com/golang/mock/mockgen@v1.6.0
 RUN go generate ./...
 
 COPY main.go .
