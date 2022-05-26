@@ -46,5 +46,5 @@ jobs:
 
       - name: Push image to DigitalOcean Container Registry
         run: >
-          docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8}
+          docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8} &&\
           docker push ${REGISTRY}/${IMAGE_NAME}:latest
