@@ -32,6 +32,8 @@ type cardService struct {
 	usersRepo  repo.UserRepo
 }
 
+const EncryptionKeyID = "v1"
+
 func NewCardService(usersRepo repo.UserRepo, cardsRepo repo.CardRepo, privateKey *rsa.PrivateKey) CardService {
 	return &cardService{
 		privateKey: privateKey,
@@ -96,6 +98,7 @@ func (c *cardService) Create(userId uuid.UUID, newCard *schema.NewCardRequest) (
 		Title:  newCard.Title,
 		Data:   base64.StdEncoding.EncodeToString([]byte(encryptedData)),
 		Key:    base64.StdEncoding.EncodeToString(encryptedKey),
+		KeyID:  EncryptionKeyID,
 	})
 
 	if err != nil {
@@ -153,8 +156,9 @@ func (c *cardService) Decrypt(cardId uuid.UUID) (*schema.PlainCardResponse, erro
 	}
 
 	return &schema.PlainCardResponse{
-		Data: data,
-		Key:  string(passphrase),
+		Title: card.Title,
+		Data:  data,
+		Key:   string(passphrase),
 	}, nil
 }
 
@@ -168,6 +172,7 @@ func (c *cardService) cardToResponse(card *entities.Card) *schema.CardResponse {
 		UserId:        card.UserId,
 		Title:         card.Title,
 		EncryptedData: card.EncryptedData,
+		KeyID:         card.KeyID,
 		CreatedAt:     card.CreatedAt,
 		UpdatedAt:     card.UpdatedAt,
 	}

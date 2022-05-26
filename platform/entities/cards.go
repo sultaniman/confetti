@@ -10,6 +10,7 @@ type NewCard struct {
 	Title  string
 	Data   string
 	Key    string
+	KeyID  string
 }
 
 type TitleUpdate struct {
@@ -22,6 +23,7 @@ type Card struct {
 	Title         string    `db:"title"`
 	EncryptedData string    `db:"encrypted_data"`
 	EncryptedKey  string    `db:"encrypted_key"`
+	KeyID         string    `db:"key_id"` // system key id
 	CreatedAt     time.Time `db:"created_at"`
 	UpdatedAt     time.Time `db:"updated_at"`
 }

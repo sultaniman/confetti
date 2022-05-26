@@ -80,6 +80,7 @@ func (c *cardRepo) Create(card *entities.NewCard) (*entities.Card, error) {
 			"title",
 			"encrypted_data",
 			"encrypted_key",
+			"key_id",
 			"created_at",
 			"updated_at",
 		).
@@ -88,6 +89,7 @@ func (c *cardRepo) Create(card *entities.NewCard) (*entities.Card, error) {
 			card.Title,
 			card.Data,
 			card.Key,
+			card.KeyID,
 			time.Now().UTC(),
 			time.Now().UTC(),
 		).
