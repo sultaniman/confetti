@@ -27,6 +27,12 @@ CO_ACCESS_TOKEN_TTL=1h
 $ openssl genrsa -out key.pem 2048
 ```
 
+## To generate swagger
+
+```sh
+$ go install github.com/golang/mock/mockgen@v1.6.0
+```
+
 ## Migrate
 
 First create database then run migrations to create tables
