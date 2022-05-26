@@ -16,7 +16,8 @@ on:
 env:
   REGISTRY: "registry.digitalocean.com/confetti"
   IMAGE_NAME: "confetti"
-  TAG: $($REGISTRY/$IMAGE_NAME:$(echo $GITHUB_SHA | head -c7))
+  IMAGE_SHA: $(echo $GITHUB_SHA | head -c7)
+  TAG: $REGISTRY/$IMAGE_NAME:$IMAGE_SHA
 
 jobs:
   build_and_push:
