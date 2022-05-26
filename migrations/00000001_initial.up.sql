@@ -74,17 +74,13 @@ CREATE INDEX ix_cards_user_id ON cards (user_id);
 CREATE TABLE events
 (
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    action     VARCHAR(20) NOT NULL, -- create:user, update:user etc.
-    context    VARCHAR(20) NULL,     -- handler:users service:webhooks etc.
-    source     VARCHAR(40) NULL,     -- user id, record id etc.
+    ref        VARCHAR(1024) NULL, -- format - origin=<user_id|event_id...>;source=services:users;action=create:card;
     data       JSONB NULL DEFAULT '{}'::jsonb,
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
     expires_at TIMESTAMP WITHOUT TIME ZONE NULL
 );
 
-CREATE INDEX ix_events_action ON events (action);
-CREATE INDEX ix_events_context ON events (context);
-CREATE INDEX ix_events_source ON events (source);
+CREATE INDEX ix_events_action ON events (ref);
 
 INSERT INTO users
 VALUES (uuid_generate_v4(),

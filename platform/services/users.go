@@ -2,6 +2,7 @@ package services
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/omeid/pgerror"
@@ -40,12 +41,14 @@ type UserService interface {
 
 type userService struct {
 	usersRepo   repo.UserRepo
+	eventsRepo  repo.EventRepo
 	mailHandler mailer.Mailer
 }
 
-func NewUserService(usersRepo repo.UserRepo, mailHandler mailer.Mailer) UserService {
+func NewUserService(usersRepo repo.UserRepo, eventsRepo repo.EventRepo, mailHandler mailer.Mailer) UserService {
 	return &userService{
 		usersRepo:   usersRepo,
+		eventsRepo:  eventsRepo,
 		mailHandler: mailHandler,
 	}
 }
@@ -116,6 +119,26 @@ func (s *userService) Create(newUserRequest *schema.NewUserRequest) (*schema.Use
 		Settings:    newUserRequest.Settings,
 		Provider:    newUserRequest.Provider,
 	})
+
+	userEventData, err := json.Marshal(schema.UserEventData{
+		ID:          user.ID,
+		FullName:    user.FullName,
+		IsActive:    user.IsActive,
+		IsConfirmed: user.IsConfirmed,
+		Provider:    user.Provider,
+		Settings:    user.Settings,
+	})
+
+	if err != nil {
+		log.Error().
+			Err(err).
+			Msg(fmt.Sprintf("Unable to serialize user creation event data '%s'", user.ID.String()))
+	} else {
+		s.eventsRepo.Add(&entities.Event{
+			Ref:  util.PrepareEvent(user.ID.String(), "services:users", "create:user"),
+			Data: userEventData,
+		})
+	}
 
 	if err != nil {
 		if e := pgerror.UniqueViolation(err); e != nil {
@@ -286,7 +309,7 @@ func (s *userService) ConfirmUser(code string) error {
 			Str("user_id", actionCode.UserId.String()).
 			Msg(fmt.Sprintf("Unable to confirm user"))
 
-		return http.InternalErrorWithMessage("Something went wrong during conifmation")
+		return http.InternalErrorWithMessage("Something went wrong during confirmation")
 	}
 
 	return nil
