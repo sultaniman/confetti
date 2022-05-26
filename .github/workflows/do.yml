@@ -19,7 +19,6 @@ env:
 
 jobs:
   build_and_push:
-    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
