@@ -16,6 +16,7 @@ on:
 env:
   REGISTRY: "registry.digitalocean.com/confetti"
   IMAGE_NAME: "confetti"
+  TAG: $($REGISTRY/$IMAGE_NAME:$(echo $GITHUB_SHA | head -c7))
 
 jobs:
   build_and_push:
@@ -25,9 +26,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build container image
-        run: >
-          TAG=$($REGISTRY/$IMAGE_NAME:$(echo $GITHUB_SHA | head -c7))
-          docker build -t $TAG .
+        run: docker build -t $TAG .
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
