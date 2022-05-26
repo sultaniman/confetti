@@ -21,6 +21,12 @@ CO_REFRESH_TOKEN_TTL=4320h
 CO_ACCESS_TOKEN_TTL=1h
 ```
 
+## Generate key
+
+```sh
+$ openssl genrsa -out key.pem 2048
+```
+
 ## Migrate
 
 First create database then run migrations to create tables
