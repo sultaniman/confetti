@@ -16,19 +16,22 @@ on:
 env:
   REGISTRY: "registry.digitalocean.com/confetti"
   IMAGE_NAME: "confetti"
-#  IMAGE_SHA: $(echo ${GITHUB_SHA:0:7})
-#  TAG: ${REGISTRY}/${IMAGE_NAME}:${IMAGE_SHA}
+  IMAGE_SHA: ${GITHUB_SHA:0:8}
+  TAG: ${REGISTRY}/${IMAGE_NAME}:${IMAGE_SHA}
 
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
+    env:
+      TAG: ${REGISTRY}/${IMAGE_NAME}:${IMAGE_SHA}
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
 
       - name: Build container image
         run: >
-          echo ${GITHUB_SHA:0:7}
+          echo ${GITHUB_SHA:0:8}
+          echo ${TAG}
 #        run: docker build -t $TAG .
 
       - name: Install doctl
