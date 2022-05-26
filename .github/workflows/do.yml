@@ -28,7 +28,7 @@ jobs:
 
       - name: Build container image
         run: >
-          - echo ${GITHUB_SHA:0:7}
+          echo ${GITHUB_SHA:0:7}
 #        run: docker build -t $TAG .
 
       - name: Install doctl
