@@ -29,7 +29,7 @@ var serveCmd = &cobra.Command{
 		db.SetConnMaxLifetime(time.Hour)
 
 		keyLoader := keys.GetLoader(viper.GetString("key_loader"))
-		key, err := keyLoader.Load(viper.GetString("private_key"))
+		key, err := keyLoader.Load(viper.GetString("key_path"))
 		if err != nil {
 			return err
 		}
