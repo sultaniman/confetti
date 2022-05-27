@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/davecgh/go-spew/spew"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -56,24 +56,24 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 		return nil, err
 	}
 
-	s3Client := s3.New(newSession)
-	result, err := s3Client.GetObject(&s3.GetObjectInput{
+	//s3Client := s3.New(newSession)
+	downloader := s3manager.NewDownloader(newSession)
+
+	getObjectInput := &s3.GetObjectInput{
 		Bucket: aws.String(viper.GetString("keys_bucket")),
 		Key:    aws.String(path),
-	})
-	spew.Dump(result, err)
+	}
+
+	//result, err := s3Client.GetObject(getObjectInput)
+	result := &aws.WriteAtBuffer{}
+	_, err = downloader.Download(result, getObjectInput)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Unable to read private key object")
 		return nil, err
 	}
 
-	rawKey, err := ioutil.ReadAll(result.Body)
-	if err != nil {
-		log.Fatal().Err(err).Msg(fmt.Sprintf("Unable to read key: %s", path))
-		return nil, err
-	}
-
-	return decodeRSAKey(rawKey)
+	rsaKey, err := decodeRSAKey(result.Bytes())
+	return rsaKey, err
 }
 
 // FSLoader Filesystem key loader
