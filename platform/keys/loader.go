@@ -10,7 +10,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -75,7 +74,6 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 	}
 
 	rsaKey, err := decodeRSAKey(result.Bytes())
-	spew.Dump(rsaKey)
 	return rsaKey, err
 }
 
