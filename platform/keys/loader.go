@@ -60,8 +60,8 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 	downloader := s3manager.NewDownloader(newSession)
 
 	getObjectInput := &s3.GetObjectInput{
-		Bucket: aws.String(viper.GetString("keys_bucket")),
-		Key:    aws.String(path),
+		Bucket: aws.String(strings.TrimSpace(viper.GetString("keys_bucket"))),
+		Key:    aws.String(strings.TrimSpace(path)),
 	}
 
 	//result, err := s3Client.GetObject(getObjectInput)
