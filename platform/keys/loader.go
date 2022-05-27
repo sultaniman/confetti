@@ -56,18 +56,11 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 	}
 
 	s3Client := s3.New(newSession)
-	input := &s3.GetObjectInput{
+	result, err := s3Client.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(viper.GetString("keys_bucket")),
 		Key:    aws.String(path),
-	}
-	listInput := &s3.ListObjectsInput{
-		Bucket: aws.String(viper.GetString("keys_bucket")),
-	}
-
-	listResult, err := s3Client.ListObjects(listInput)
-	spew.Dump(listResult)
-
-	result, err := s3Client.GetObject(input)
+	})
+	spew.Dump(result, err)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Unable to read private key object")
 		return nil, err
