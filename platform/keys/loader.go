@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -59,6 +60,12 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 		Bucket: aws.String(viper.GetString("keys_bucket")),
 		Key:    aws.String(path),
 	}
+	listInput := &s3.ListObjectsInput{
+		Bucket: aws.String(viper.GetString("keys_bucket")),
+	}
+
+	listResult, err := s3Client.ListObjects(listInput)
+	spew.Dump(listResult)
 
 	result, err := s3Client.GetObject(input)
 	if err != nil {
