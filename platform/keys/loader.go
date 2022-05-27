@@ -44,9 +44,10 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 	secret := viper.GetString("spaces_secret")
 
 	s3Config := &aws.Config{
-		Credentials: credentials.NewStaticCredentials(key, secret, ""),
-		Endpoint:    aws.String(viper.GetString("spaces_endpoint")),
-		Region:      aws.String(viper.GetString("spaces_region")),
+		Credentials:                    credentials.NewStaticCredentials(key, secret, ""),
+		Endpoint:                       aws.String(viper.GetString("spaces_endpoint")),
+		Region:                         aws.String(viper.GetString("spaces_region")),
+		DisableRestProtocolURICleaning: aws.Bool(true),
 	}
 
 	newSession, err := session.NewSession(s3Config)
