@@ -65,6 +65,8 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 		Key:    aws.String(path),
 	}
 
+	fmt.Println("bucket", viper.GetString("keys_bucket"))
+	fmt.Println("path", path)
 	log.Info().
 		Str("key_path", *getObjectInput.Key).
 		Str("bucket", *getObjectInput.Bucket).
