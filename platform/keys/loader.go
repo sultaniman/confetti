@@ -35,7 +35,7 @@ type KeySet []EncryptionKey
 type RemoteLoader struct{}
 
 func NewRemoteLoader() KeyLoader {
-	return &FSLoader{}
+	return &RemoteLoader{}
 }
 
 func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
