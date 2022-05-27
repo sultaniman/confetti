@@ -43,7 +43,6 @@ func NewRemoteLoader() KeyLoader {
 func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 	key := viper.GetString("spaces_key")
 	secret := viper.GetString("spaces_secret")
-
 	s3Config := &aws.Config{
 		Credentials:                    credentials.NewStaticCredentials(key, secret, ""),
 		Endpoint:                       aws.String(viper.GetString("spaces_endpoint")),
@@ -57,20 +56,22 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 		return nil, err
 	}
 
-	spew.Dump("Config", s3Config)
-
-	//s3Client := s3.New(newSession)
-	downloader := s3manager.NewDownloader(newSession)
-
+	//getObjectInput := &s3.GetObjectInput{
+	//	Bucket: aws.String("confetti"),
+	//	Key:    aws.String("confetti-dev/confetti-key.pem"),
+	//}
 	getObjectInput := &s3.GetObjectInput{
-		Bucket: aws.String("confetti"),
-		Key:    aws.String("confetti-dev/confetti-key.pem"),
+		Bucket: aws.String(viper.GetString("keys_bucket")),
+		Key:    aws.String(path),
 	}
 
-	spew.Dump("InputObject", getObjectInput)
+	log.Info().
+		Str("key_path", *getObjectInput.Key).
+		Str("bucket", *getObjectInput.Bucket).
+		Msg("Loading key")
 
-	//result, err := s3Client.GetObject(getObjectInput)
 	result := &aws.WriteAtBuffer{}
+	downloader := s3manager.NewDownloader(newSession)
 	_, err = downloader.Download(result, getObjectInput)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Unable to read private key object")
