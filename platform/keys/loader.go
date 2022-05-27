@@ -63,8 +63,8 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 	downloader := s3manager.NewDownloader(newSession)
 
 	getObjectInput := &s3.GetObjectInput{
-		Bucket: aws.String(strings.TrimSpace(viper.GetString("keys_bucket"))),
-		Key:    aws.String(strings.TrimSpace(path)),
+		Bucket: aws.String("confetti"),
+		Key:    aws.String("confetti-dev/confetti-key.pem"),
 	}
 
 	spew.Dump("InputObject", getObjectInput)
@@ -78,6 +78,7 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 	}
 
 	rsaKey, err := decodeRSAKey(result.Bytes())
+	spew.Dump(rsaKey)
 	return rsaKey, err
 }
 
