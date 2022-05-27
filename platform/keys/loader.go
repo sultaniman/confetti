@@ -56,17 +56,11 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 		return nil, err
 	}
 
-	//getObjectInput := &s3.GetObjectInput{
-	//	Bucket: aws.String("confetti"),
-	//	Key:    aws.String("confetti-dev/confetti-key.pem"),
-	//}
 	getObjectInput := &s3.GetObjectInput{
 		Bucket: aws.String(viper.GetString("keys_bucket")),
 		Key:    aws.String(path),
 	}
 
-	fmt.Println("bucket", viper.GetString("keys_bucket"))
-	fmt.Println("path", path)
 	log.Info().
 		Str("key_path", *getObjectInput.Key).
 		Str("bucket", *getObjectInput.Bucket).
