@@ -24,5 +24,4 @@ VOLUME /etc/confetti
 
 EXPOSE 8000
 
-ENTRYPOINT ["/confetti"]
-CMD ["serve"]
+CMD ["./scripts/run.sh"]
