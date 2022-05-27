@@ -24,4 +24,4 @@ VOLUME /etc/confetti
 
 EXPOSE 8000
 
-CMD ["./scripts/run.sh"]
+CMD ["/app/scripts/run.sh"]
