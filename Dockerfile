@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine AS builder
+FROM golang:1.18-alpine AS builder
 RUN apk --update add ca-certificates
 
 WORKDIR /app
@@ -13,15 +13,17 @@ COPY . .
 COPY main.go .
 RUN CGO_ENABLED=0 go build -o /build/confetti
 
-FROM scratch
+FROM alpine:latest
+
+RUN apk add --no-cache --upgrade bash
+
 COPY --from=builder /build/ /
-
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-
 COPY migrations /migrations
+COPY scripts/run.sh /app/run.sh
 
 VOLUME /etc/confetti
 
 EXPOSE 8000
 
-CMD ["/app/scripts/run.sh"]
+CMD ["sh", "/app/run.sh"]
