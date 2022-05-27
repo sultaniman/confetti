@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -56,6 +57,8 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 		return nil, err
 	}
 
+	spew.Dump("Config", s3Config)
+
 	//s3Client := s3.New(newSession)
 	downloader := s3manager.NewDownloader(newSession)
 
@@ -63,6 +66,8 @@ func (r *RemoteLoader) Load(path string) (*rsa.PrivateKey, error) {
 		Bucket: aws.String(strings.TrimSpace(viper.GetString("keys_bucket"))),
 		Key:    aws.String(strings.TrimSpace(path)),
 	}
+
+	spew.Dump("InputObject", getObjectInput)
 
 	//result, err := s3Client.GetObject(getObjectInput)
 	result := &aws.WriteAtBuffer{}
