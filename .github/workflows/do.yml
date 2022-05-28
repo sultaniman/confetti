@@ -51,6 +51,7 @@ jobs:
           export AWS_SECRET_ACCESS_KEY="${{secrets.AWS_SECRET_ACCESS_KEY}}";
           pip install boto3;
           python ./scripts/settings.py;
+          ls -hal;
 #
 #      - name: Push image with hash to registry
 #        run: docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8}
