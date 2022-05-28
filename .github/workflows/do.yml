@@ -19,6 +19,7 @@ env:
 
 jobs:
   build_and_push:
+    name: 🔨 Build & Push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
@@ -34,6 +35,9 @@ jobs:
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
+
+      - name: List all images
+        run: doctl registry repository list
 
       - name: Remove all old images
         run: >
