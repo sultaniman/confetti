@@ -48,16 +48,5 @@ jobs:
       - name: Push image with hash to registry
         run: docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8}
 
-      - name: Update deployment
-        run: >
-          APP_ID=$(doctl apps list -o json | jq -r '.[] | select(.spec.name=="confetti-dev") | .id');
-          doctl apps update $APP_ID --spec <<EOF
-            services:
-              image:
-                registry_type: DOCR
-                repository: confetti
-                tag: ${GITHUB_SHA:0:8}
-          EOF
-
-#      - name: Push latest image tag to registry
-#        run: docker push ${REGISTRY}/${IMAGE_NAME}:latest
+      - name: Push latest image tag to registry
+        run: docker push ${REGISTRY}/${IMAGE_NAME}:latest
