@@ -40,10 +40,12 @@ jobs:
         run: doctl registry repository list-tags confetti
 
       - name: List apps
-        run: doctl apps list -o json | jq '.[] | select(.spec.name=="confetti-dev") | .id'
+        run: doctl apps list
 
       - name: List deployments
-        run: doctl apps list-deployments confetti
+        run: >
+          DEPLOYMENT_ID=$(doctl apps list -o json | jq '.[] | select(.spec.name=="confetti-dev") | .id');
+          doctl apps list-deployments $DEPLOYMENT_ID;
 
       - name: Remove all old images
         run: >
