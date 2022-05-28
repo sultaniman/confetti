@@ -40,7 +40,7 @@ jobs:
         run: doctl registry repository list-tags confetti
 
       - name: List apps
-        run: doctl apps list -o json | jq .
+        run: doctl apps list -o json | jq '.[] | select(.spec.name=="${IMAGE_NAME}-${GITHUB_REF_NAME}")'
 
       - name: List deployments
         run: doctl apps list-deployments confetti
