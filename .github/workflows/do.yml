@@ -47,11 +47,8 @@ jobs:
 
       - name: Ls bucket
         run: >
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip";
-          unzip awscliv2.zip;
           AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}};
           AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}};
-          sudo ./aws/install -i /usr/local/aws-cli -b /usr/local/bin;
           aws s3 ls --endpoint=https://ams3.digitaloceanspaces.com;
 #
 #      - name: Push image with hash to registry
