@@ -40,7 +40,7 @@ jobs:
         run: doctl registry repository list-tags confetti
 
       - name: List apps
-        run: doctl apps list -o json | jq '.[] | select(.spec.name=="confetti-dev")'
+        run: doctl apps list -o json | jq '.[] | select(.spec.name=="confetti-dev") | .id'
 
       - name: List deployments
         run: doctl apps list-deployments confetti
