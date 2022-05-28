@@ -49,8 +49,7 @@ jobs:
         run: >
           AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}};
           AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}};
-          AWS_EC2_METADATA_DISABLED=true;
-          aws s3 ls --endpoint=https://ams3.digitaloceanspaces.com s3://confetti;
+          aws s3 ls --endpoint=https://confetti.ams3.digitaloceanspaces.com;
 #
 #      - name: Push image with hash to registry
 #        run: docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8}
