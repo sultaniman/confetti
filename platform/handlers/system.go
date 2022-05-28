@@ -14,5 +14,5 @@ import (
 // @Router /system/health [get]
 func (h *Handler) Health(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).
-		JSON(&schema.HealthResponse{OK: true, DB: true})
+		JSON(&schema.HealthResponse{OK: true})
 }
