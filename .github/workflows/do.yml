@@ -24,29 +24,38 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
+#
+#      - name: Build container image
+#        run: docker build -t ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8} -t ${REGISTRY}/${IMAGE_NAME}:latest .
+#
+#      - name: Install doctl
+#        uses: digitalocean/action-doctl@v2
+#        with:
+#          token: ${{ secrets.DO_ACCESS_TOKEN }}
+#
+#      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+#        run: doctl registry login --expiry-seconds 600
+#
+#      - name: Remove all old images
+#        run: >
+#          if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then
+#            IMAGE_HASH=$(doctl registry repository list-tags $IMAGE_NAME | grep -o "sha.*");
+#            doctl registry repository delete-manifest $IMAGE_NAME $IMAGE_HASH --force;
+#          else
+#            echo "No repository";
+#          fi
 
-      - name: Build container image
-        run: docker build -t ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8} -t ${REGISTRY}/${IMAGE_NAME}:latest .
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DO_ACCESS_TOKEN }}
-
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
-
-      - name: Remove all old images
+      - name: Ls bucket
         run: >
-          if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then
-            IMAGE_HASH=$(doctl registry repository list-tags $IMAGE_NAME | grep -o "sha.*");
-            doctl registry repository delete-manifest $IMAGE_NAME $IMAGE_HASH --force;
-          else
-            echo "No repository";
-          fi
-
-      - name: Push image with hash to registry
-        run: docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8}
-
-      - name: Push latest image tag to registry
-        run: docker push ${REGISTRY}/${IMAGE_NAME}:latest
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}}
+          sudo ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
+          aws s3 ls --endpoint=https://ams3.digitaloceanspaces.com
+#
+#      - name: Push image with hash to registry
+#        run: docker push ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8}
+#
+#      - name: Push latest image tag to registry
+#        run: docker push ${REGISTRY}/${IMAGE_NAME}:latest
