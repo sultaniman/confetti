@@ -36,16 +36,14 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
 
-      - name: List all images
-        run: doctl registry repository list
-
       - name: List all tags
-        run: doctl registry repository list-tags confetti --output json | jq ".[5:] | .[] | .tag " -r | tr '\n' ' '
+        run: doctl registry repository list-tags confetti
 
       - name: Remove all old images
         run: >
           if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then
             IMAGE_HASH=$(doctl registry repository list-tags $IMAGE_NAME | grep -o "sha.*");
+            echo "Removing ${IMAGE_HASH}";
             doctl registry repository delete-manifest $IMAGE_NAME $IMAGE_HASH --force;
           else
             echo "No repository";
