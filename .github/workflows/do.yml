@@ -40,7 +40,7 @@ jobs:
         run: doctl registry repository list
 
       - name: List all tags
-        run: doctl registry repository list-tags confetti
+        run: doctl registry repository list-tags confetti --output json | jq ".[5:] | .[] | .tag " -r | tr '\n' ' '
 
       - name: Remove all old images
         run: >
