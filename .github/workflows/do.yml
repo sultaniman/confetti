@@ -65,9 +65,9 @@ jobs:
           doctl apps update $APP_ID --spec <<EOF
             services:
               image:
-              registry_type: DOCR
-              repository: confetti
-              tag: ${GITHUB_SHA:0:8}
+                registry_type: DOCR
+                repository: confetti
+                tag: ${GITHUB_SHA:0:8}
           EOF
 
 #      - name: Push latest image tag to registry
