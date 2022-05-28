@@ -43,7 +43,6 @@ jobs:
         run: >
           if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then
             IMAGE_HASH=$(doctl registry repository list-tags $IMAGE_NAME | grep -o "sha.*");
-            echo "Removing ${IMAGE_HASH}";
             doctl registry repository delete-manifest $IMAGE_NAME $IMAGE_HASH --force;
           else
             echo "No repository";
