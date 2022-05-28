@@ -39,6 +39,12 @@ jobs:
       - name: List all tags
         run: doctl registry repository list-tags confetti
 
+      - name: List apps
+        run: doctl apps list
+
+      - name: List deployments
+        run: doctl apps list-deployments
+
       - name: Remove all old images
         run: >
           if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then
