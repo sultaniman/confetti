@@ -10,4 +10,8 @@ client = session.client(
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
 
-client.download_file('confetti', 'confetti-dev/confetti-dev.yaml', './confetti-dev.yaml')
+# TODO: parameterize arguments
+bucket = 'confetti'
+source = 'confetti-dev/confetti-dev.yaml'
+target = './confetti-dev.yaml'
+client.download_file(bucket, source, target)
