@@ -64,5 +64,4 @@ jobs:
           export AWS_SECRET_ACCESS_KEY="${{secrets.AWS_SECRET_ACCESS_KEY}}";
           export APP_ID=$(doctl apps list -o json | jq -r '.[] | select(.spec.name=="confetti-dev") | .id');
           yq -i '.services.0.image.tag |= "${{GITHUB_SHA:0:8}}"' confetti-dev.yaml;
-          cat confetti-dev.yaml;
           doctl apps update ${APP_ID} --spec confetti-dev.yaml;
