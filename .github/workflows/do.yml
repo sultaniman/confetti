@@ -44,7 +44,7 @@ jobs:
 
       - name: List deployments
         run: >
-          DEPLOYMENT_ID=$(doctl apps list -o json | jq '.[] | select(.spec.name=="confetti-dev") | .id');
+          DEPLOYMENT_ID=$(doctl apps list -o json | jq -r '.[] | select(.spec.name=="confetti-dev") | .id');
           doctl apps list-deployments $DEPLOYMENT_ID;
 
       - name: Remove all old images
