@@ -51,8 +51,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}};
           pip install s3cmd;
           s3cmd --host=https://ams3.digitaloceanspaces.com \
-                --access_key=${{secrets.AWS_ACCESS_KEY_ID}} \
-                --secret_key=${{secrets.AWS_SECRET_ACCESS_KEY}} \
+                --access_key=${AWS_ACCESS_KEY_ID} \
+                --secret_key=${AWS_SECRET_ACCESS_KEY} \
                 ls s3://confetti;
 #
 #      - name: Push image with hash to registry
