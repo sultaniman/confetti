@@ -25,6 +25,9 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v2
 
+      - name: Show ref
+        run: echo $GITHUB_REF_NAME
+
       - name: Build container image
         run: docker build -t ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA:0:8} -t ${REGISTRY}/${IMAGE_NAME}:latest .
 
