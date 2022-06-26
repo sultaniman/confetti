@@ -14,6 +14,6 @@ bucket = os.getenv('BUCKET', 'confetti')
 source = os.getenv('APP_SPEC', 'confetti-dev/confetti-dev.yaml')
 target = os.getenv('APP_SPEC_LOCAL', './confetti-dev.yaml')
 
-print("bucket=%s, spec=%s, local file=%s" % bucket, source, target)
+print("bucket=%s, spec=%s, local file=%s" % (bucket, source, target))
 
 client.download_file(bucket, source, target)
