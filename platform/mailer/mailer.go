@@ -5,11 +5,10 @@ import (
 )
 
 type EmailMessage struct {
-	Subject   string
-	ToEmail   string
-	FromEmail string
-	TextBody  string
-	HTMLBody  string
+	Subject  string
+	ToEmail  string
+	TextBody string
+	HTMLBody string
 }
 
 type Mailer interface {
@@ -20,8 +19,10 @@ type Mailer interface {
 
 func GetMailer() Mailer {
 	switch viper.GetString("mailer") {
-	case "sendgrid":
-		return NewSendgridMailer()
+	case "gmail":
+		return NewGmailMailer()
+	case "mailjet":
+		return NewMJMailer()
 	default:
 		return NewDummyMailer()
 	}

@@ -11,22 +11,20 @@ type dummyMailer struct{}
 func (d *dummyMailer) SendConfirmationCode(toEmail string, code string) error {
 	link := fmt.Sprintf("https://%s/confirm/%s", viper.GetString("app_host"), code)
 	return d.Send(&EmailMessage{
-		Subject:   "Your confirmation link",
-		ToEmail:   toEmail,
-		FromEmail: viper.GetString("from_email"),
-		TextBody:  fmt.Sprintf("Please use the following confirmation link: %s", link),
-		HTMLBody:  fmt.Sprintf("Please use the following confirmation link: %s", link),
+		Subject:  "Your confirmation link",
+		ToEmail:  toEmail,
+		TextBody: fmt.Sprintf("Please use the following confirmation link: %s", link),
+		HTMLBody: fmt.Sprintf("Please use the following confirmation link: %s", link),
 	})
 }
 
 func (d *dummyMailer) SendPasswordResetCode(toEmail string, code string) error {
 	link := fmt.Sprintf("https://%s/reset-password/%s", viper.GetString("app_host"), code)
 	return d.Send(&EmailMessage{
-		Subject:   "Your password reset link",
-		ToEmail:   toEmail,
-		FromEmail: viper.GetString("from_email"),
-		TextBody:  fmt.Sprintf("Please use the following link to reset your password: %s", link),
-		HTMLBody:  fmt.Sprintf("Please use the following link to reset your password: %s", link),
+		Subject:  "Your password reset link",
+		ToEmail:  toEmail,
+		TextBody: fmt.Sprintf("Please use the following link to reset your password: %s", link),
+		HTMLBody: fmt.Sprintf("Please use the following link to reset your password: %s", link),
 	})
 }
 
