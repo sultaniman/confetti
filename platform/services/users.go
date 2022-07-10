@@ -33,7 +33,7 @@ type UserService interface {
 	ResetPassword(userId uuid.UUID, newPassword string) error
 	CreateConfirmation(userId uuid.UUID) (*schema.ActionCode, error)
 	ResendConfirmation(userId uuid.UUID) error
-	ConfirmUser(code string) error
+	ConfirmUser(userId uuid.UUID, code string) error
 	Delete(id uuid.UUID) (*schema.UserResponse, error)
 	Exists(userId uuid.UUID) bool
 	EmailExists(email string) bool
@@ -288,7 +288,7 @@ func (s *userService) UpdatePassword(userId uuid.UUID, passwordUpdate *schema.Up
 	return s.userToResponse(updatedUser), nil
 }
 
-func (s *userService) ConfirmUser(code string) error {
+func (s *userService) ConfirmUser(userId uuid.UUID, code string) error {
 	actionCode, err := s.usersRepo.GetActionCode(&entities.ActionCodeCheck{
 		Type: entities.UserConfirmations,
 		Code: code,
@@ -296,6 +296,10 @@ func (s *userService) ConfirmUser(code string) error {
 
 	if err != nil {
 		return http.NotFoundError("Confirmation code not found")
+	}
+
+	if userId != actionCode.UserId {
+		return http.Conflict("Confirmation belongs to another user")
 	}
 
 	if actionCode.CreatedAt.Add(UserConfirmationTTL).Before(time.Now().UTC()) {

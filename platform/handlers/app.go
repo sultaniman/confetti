@@ -55,7 +55,7 @@ func App(handler *Handler) *fiber.App {
 
 	accounts := app.Group("/accounts")
 	accounts.Post("/register", handler.Register)
-	accounts.Get("/confirm/:code", handler.Confirm)
+	accounts.Get("/confirm/:code", authMiddleware, handler.Confirm)
 	accounts.Post("/resend-confirmation", authMiddleware, handler.ResendConfirmation)
 	accounts.Post("/reset-password", handler.ResetPasswordRequest)
 	accounts.Post("/reset-password/:code", handler.ResetPassword)
