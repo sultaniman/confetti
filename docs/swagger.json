@@ -380,19 +380,19 @@
         },
         "/{id}": {
             "get": {
-                "description": "Decrypt card by id",
+                "description": "Get card by id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "cards"
                 ],
-                "summary": "Decrypt card by id",
+                "summary": "Get card by id",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schema.PlainCardResponse"
+                            "$ref": "#/definitions/schema.CardResponse"
                         }
                     }
                 }
@@ -433,6 +433,26 @@
                     }
                 }
             }
+        },
+        "/{id}/decrypt": {
+            "get": {
+                "description": "Decrypt card by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cards"
+                ],
+                "summary": "Decrypt card by id",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.PlainCardResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -446,6 +466,9 @@
                     "type": "string"
                 },
                 "id": {
+                    "type": "string"
+                },
+                "keyID": {
                     "type": "string"
                 },
                 "title": {
@@ -485,6 +508,9 @@
                     "type": "string"
                 },
                 "key": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }

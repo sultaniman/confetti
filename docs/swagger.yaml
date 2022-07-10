@@ -7,6 +7,8 @@ definitions:
         type: string
       id:
         type: string
+      keyID:
+        type: string
       title:
         type: string
       updatedAt:
@@ -31,6 +33,8 @@ definitions:
       data:
         type: string
       key:
+        type: string
+      title:
         type: string
     type: object
   schema.TokenResponse:
@@ -108,15 +112,15 @@ paths:
       tags:
       - cards
     get:
-      description: Decrypt card by id
+      description: Get card by id
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schema.PlainCardResponse'
-      summary: Decrypt card by id
+            $ref: '#/definitions/schema.CardResponse'
+      summary: Get card by id
       tags:
       - cards
     put:
@@ -129,6 +133,19 @@ paths:
           schema:
             type: string
       summary: Update card
+      tags:
+      - cards
+  /{id}/decrypt:
+    get:
+      description: Decrypt card by id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PlainCardResponse'
+      summary: Decrypt card by id
       tags:
       - cards
   /accounts/confirm/{code}:

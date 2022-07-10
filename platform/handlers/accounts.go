@@ -80,8 +80,8 @@ func (h *Handler) ResetPassword(ctx *fiber.Ctx) error {
 // @Router /accounts/confirm/{code} [get]
 func (h *Handler) Confirm(ctx *fiber.Ctx) error {
 	code := ctx.Params("code")
-	userId, err := h.Params.GetUserIdFromLocals(ctx)
 
+	userId, err := h.Params.GetUserIdFromLocals(ctx)
 	if err != nil {
 		return err
 	}
