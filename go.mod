@@ -15,7 +15,7 @@ require (
 	github.com/lib/pq v1.10.6
 	github.com/mailjet/mailjet-apiv3-go v0.0.0-20201009050126-c24bc15a9394
 	github.com/omeid/pgerror v0.0.0-20201018020948-42c66c4d27d4
-	github.com/rs/zerolog v1.26.1
+	github.com/rs/zerolog v1.30.0
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.12.0
 	github.com/sultaniman/pwc v0.0.0-20220516101844-477008bd8a92
@@ -58,6 +58,8 @@ require (
 	github.com/lestrrat-go/option v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
