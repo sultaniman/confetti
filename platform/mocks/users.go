@@ -35,6 +35,21 @@ func (m *MockUserRepo) EXPECT() *MockUserRepoMockRecorder {
 	return m.recorder
 }
 
+// ConfirmUser mocks base method.
+func (m *MockUserRepo) ConfirmUser(userId uuid.UUID) (*entities.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ConfirmUser", userId)
+	ret0, _ := ret[0].(*entities.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ConfirmUser indicates an expected call of ConfirmUser.
+func (mr *MockUserRepoMockRecorder) ConfirmUser(userId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConfirmUser", reflect.TypeOf((*MockUserRepo)(nil).ConfirmUser), userId)
+}
+
 // Create mocks base method.
 func (m *MockUserRepo) Create(user *entities.NewUser) (*entities.User, error) {
 	m.ctrl.T.Helper()
@@ -48,6 +63,21 @@ func (m *MockUserRepo) Create(user *entities.NewUser) (*entities.User, error) {
 func (mr *MockUserRepoMockRecorder) Create(user interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockUserRepo)(nil).Create), user)
+}
+
+// CreateActionCode mocks base method.
+func (m *MockUserRepo) CreateActionCode(actionCodeRequest *entities.ActionCodeRequest) (*entities.ActionCode, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateActionCode", actionCodeRequest)
+	ret0, _ := ret[0].(*entities.ActionCode)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateActionCode indicates an expected call of CreateActionCode.
+func (mr *MockUserRepoMockRecorder) CreateActionCode(actionCodeRequest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateActionCode", reflect.TypeOf((*MockUserRepo)(nil).CreateActionCode), actionCodeRequest)
 }
 
 // Delete mocks base method.
@@ -106,6 +136,21 @@ func (m *MockUserRepo) Get(id uuid.UUID) (*entities.User, error) {
 func (mr *MockUserRepoMockRecorder) Get(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockUserRepo)(nil).Get), id)
+}
+
+// GetActionCode mocks base method.
+func (m *MockUserRepo) GetActionCode(actionCodeCheck *entities.ActionCodeCheck) (*entities.ActionCode, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetActionCode", actionCodeCheck)
+	ret0, _ := ret[0].(*entities.ActionCode)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetActionCode indicates an expected call of GetActionCode.
+func (mr *MockUserRepoMockRecorder) GetActionCode(actionCodeCheck interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActionCode", reflect.TypeOf((*MockUserRepo)(nil).GetActionCode), actionCodeCheck)
 }
 
 // GetByEmail mocks base method.

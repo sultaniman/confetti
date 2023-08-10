@@ -6,15 +6,12 @@ import (
 	"crypto/sha512"
 	"database/sql"
 	"encoding/base64"
-	"encoding/json"
-	"fmt"
+	"errors"
 	"github.com/google/uuid"
-	"github.com/rs/zerolog/log"
 	"github.com/sultaniman/confetti/platform/entities"
 	"github.com/sultaniman/confetti/platform/http"
 	"github.com/sultaniman/confetti/platform/repo"
 	"github.com/sultaniman/confetti/platform/schema"
-	"github.com/sultaniman/confetti/util"
 	"github.com/sultaniman/pwc/crypto"
 	"github.com/sultaniman/pwc/gen"
 )
@@ -33,17 +30,15 @@ type CardService interface {
 type cardService struct {
 	privateKey *rsa.PrivateKey
 	cardsRepo  repo.CardRepo
-	eventsRepo repo.EventRepo
 	usersRepo  repo.UserRepo
 }
 
 const EncryptionKeyID = "v1"
 
-func NewCardService(usersRepo repo.UserRepo, cardsRepo repo.CardRepo, eventsRepo repo.EventRepo, privateKey *rsa.PrivateKey) CardService {
+func NewCardService(usersRepo repo.UserRepo, cardsRepo repo.CardRepo, privateKey *rsa.PrivateKey) CardService {
 	return &cardService{
 		privateKey: privateKey,
 		cardsRepo:  cardsRepo,
-		eventsRepo: eventsRepo,
 		usersRepo:  usersRepo,
 	}
 }
@@ -109,25 +104,6 @@ func (c *cardService) Create(userId uuid.UUID, newCard *schema.NewCardRequest) (
 
 	if err != nil {
 		return nil, http.InternalError(err)
-	}
-
-	cardEventData, err := json.Marshal(schema.CardEventData{
-		ID:            card.ID,
-		Title:         card.Title,
-		UserId:        card.UserId,
-		EncryptedData: card.EncryptedData,
-		KeyID:         card.KeyID,
-	})
-
-	if err != nil {
-		log.Error().
-			Err(err).
-			Msg(fmt.Sprintf("Unable to serialize card creation event data '%s'", card.ID.String()))
-	} else {
-		c.eventsRepo.Add(&entities.Event{
-			Ref:  util.PrepareEvent(card.ID.String(), "services:cards", "create:card"),
-			Data: cardEventData,
-		})
 	}
 
 	return c.cardToResponse(card), nil
@@ -204,7 +180,7 @@ func (c *cardService) cardToResponse(card *entities.Card) *schema.CardResponse {
 }
 
 func (c *cardService) handleError(err error) error {
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return http.NotFoundError("Card not found")
 	} else {
 		return http.InternalError(err)

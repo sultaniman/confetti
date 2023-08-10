@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "go",
+            "name": "confetti",
+            "goExecPath": "/usr/local/go/bin/go",
+            "buildTargets": ["main.go"],
+        },
+
+    ]
+}

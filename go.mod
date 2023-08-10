@@ -1,6 +1,6 @@
 module github.com/sultaniman/confetti
 
-go 1.17
+go 1.18
 
 require (
 	github.com/Masterminds/squirrel v1.5.3
@@ -13,6 +13,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/lib/pq v1.10.6
+	github.com/mailjet/mailjet-apiv3-go v0.0.0-20201009050126-c24bc15a9394
 	github.com/omeid/pgerror v0.0.0-20201018020948-42c66c4d27d4
 	github.com/rs/zerolog v1.26.1
 	github.com/spf13/cobra v1.4.0
@@ -56,7 +57,6 @@ require (
 	github.com/lestrrat-go/iter v1.0.2 // indirect
 	github.com/lestrrat-go/option v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
-	github.com/mailjet/mailjet-apiv3-go v0.0.0-20201009050126-c24bc15a9394 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect

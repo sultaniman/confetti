@@ -12,7 +12,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
-	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -93,7 +92,7 @@ func (s *FSLoader) Load(path string) (*rsa.PrivateKey, error) {
 		log.Fatal().Err(err).Msg(fmt.Sprintf("Key file not found %s", path))
 	}
 
-	rawKey, err := ioutil.ReadFile(path)
+	rawKey, err := os.ReadFile(path)
 	if err != nil {
 		log.Fatal().Err(err).Msg(fmt.Sprintf("Unable to read key: %s", path))
 		return nil, err

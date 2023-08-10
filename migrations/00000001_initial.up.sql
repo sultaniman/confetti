@@ -71,17 +71,6 @@ CREATE TABLE cards
 
 CREATE INDEX ix_cards_user_id ON cards (user_id);
 
-CREATE TABLE events
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    ref        VARCHAR(1024) NULL, -- format - origin=<user_id|event_id...>;source=services:users;action=create:card;
-    data       JSONB NULL DEFAULT '{}'::jsonb,
-    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP),
-    expires_at TIMESTAMP WITHOUT TIME ZONE NULL
-);
-
-CREATE INDEX ix_events_action ON events (ref);
-
 INSERT INTO users
 VALUES (uuid_generate_v4(),
         'Full Admin',

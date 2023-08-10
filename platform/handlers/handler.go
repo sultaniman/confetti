@@ -12,7 +12,6 @@ import (
 type Handler struct {
 	BaseRepo    *repo.Repo
 	UserRepo    repo.UserRepo
-	EventRepo   repo.EventRepo
 	UserService services.UserService
 	CardService services.CardService
 	AuthService services.AuthService
@@ -34,9 +33,8 @@ func NewHandler(db *sqlx.DB, key *rsa.PrivateKey) (*Handler, error) {
 	mailerHandler := mailer.GetMailer()
 	userRepo := repo.NewUserRepo(baseRepo)
 	cardRepo := repo.NewCardRepo(baseRepo)
-	eventRepo := repo.NewEventRepo(baseRepo)
-	userService := services.NewUserService(userRepo, eventRepo, mailerHandler)
-	cardService := services.NewCardService(userRepo, cardRepo, eventRepo, key)
+	userService := services.NewUserService(userRepo, mailerHandler)
+	cardService := services.NewCardService(userRepo, cardRepo, key)
 	jwxService, err := services.NewJWXService(key)
 	if err != nil {
 		return nil, err
