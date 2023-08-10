@@ -1,4 +1,4 @@
-image := confetti
+image := sultaniman/confetti
 tag := latest
 artifact := confetti
 git_hash ?= $(shell git log -1 --pretty=format:%h)
