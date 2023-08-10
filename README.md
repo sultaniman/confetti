@@ -1,4 +1,14 @@
-# 🚀 Confetti API
+# 🚀 Confetti
+
+[Password cards](https://github.com/sultaniman/pwc) as a service backend.
+
+Note: `keys/key.pem` is development key so can be public.
+
+## WORK IN PROGRESS
+
+## OpenAPI spec
+
+It is under `docs`
 
 ## Build
 
