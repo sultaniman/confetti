@@ -12,7 +12,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lestrrat-go/jwx v1.2.25
-	github.com/lib/pq v1.10.6
+	github.com/lib/pq v1.10.9
 	github.com/mailjet/mailjet-apiv3-go v0.0.0-20201009050126-c24bc15a9394
 	github.com/omeid/pgerror v0.0.0-20201018020948-42c66c4d27d4
 	github.com/rs/zerolog v1.30.0
