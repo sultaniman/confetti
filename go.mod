@@ -19,7 +19,7 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
 	github.com/sultaniman/pwc v0.0.0-20230215183338-c86976ebde4f
-	github.com/swaggo/swag v1.16.1
+	github.com/swaggo/swag v1.16.2
 	github.com/wagslane/go-password-validator v0.3.0
 	golang.org/x/crypto v0.12.0
 )
