@@ -9,7 +9,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang/mock v1.6.0
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.3.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lestrrat-go/jwx v1.2.26
 	github.com/lib/pq v1.10.9
