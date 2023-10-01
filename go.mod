@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
-	github.com/aws/aws-sdk-go v1.44.321
+	github.com/aws/aws-sdk-go v1.45.19
 	github.com/davecgh/go-spew v1.1.1
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/golang-migrate/migrate v3.5.4+incompatible
